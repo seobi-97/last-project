@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import LoginPage from './LoginPage/LoginPage';
 import RegisterPage from './RegisterPage/RegisterPage';
+import firebase from './firebase';
 
 function App() {
   return (
