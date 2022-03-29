@@ -1,7 +1,11 @@
 import {
   SET_USER,
   CLEAR_USER,
-  SET_PHOTO_URL
+  SET_PHOTO_URL,
+  BOARD_SAVE,
+  BOARD_REMOVE,
+  BOARD_READ,
+  BOARD_LIST,
 } from './types';
 
 export function setUser(user) {
@@ -25,4 +29,23 @@ export function setPhotoURL(photoURL) {
   }
 }
 
+export function boardSave(data){
+  return{
+    type: BOARD_SAVE,
+    data
+  }
+}
 
+export function boardRemove(brdno){
+  return{
+    type: BOARD_REMOVE,
+    brdno: brdno
+  }
+}
+
+export function boardRead(brdno){
+  return{
+    type:BOARD_READ,
+    brdno:brdno
+  }
+}

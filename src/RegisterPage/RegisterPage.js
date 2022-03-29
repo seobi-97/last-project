@@ -3,20 +3,37 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { getDatabase, ref, set } from "firebase/database";
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import md5 from 'md5';
 
 function RegisterPage() {
   const { register, watch, formState: {errors}, handleSubmit } = useForm();
   const [errorFromSubmit, setErrorFromSubmit]=useState("");
+  const [loading, setLoading] =useState(false);
+
   const password = useRef();
   password.current = watch("password");
 
   const onSubmit=async(data)=>{
     try{
+      setLoading(true)
       const auth=getAuth();
       let createdUser=await createUserWithEmailAndPassword(auth, data.email,data.password)
       console.log('createdUser',createdUser);
+
+      await updateProfile(auth.currentUser,{
+        displayName:data.name,
+        photoURL:`http:gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`
+      })
+      //데이터베이스에 저장해주기
+      set(ref(getDatabase(), `users/${createdUser.user.uid}`),{
+        name: createdUser.user.displayName,
+        image: createdUser.user.photoURL,
+      })
+
+      setLoading(false)
     }catch(error){
       setErrorFromSubmit(error.message)
+      setLoading(false)
       setTimeout(()=>{
         setErrorFromSubmit("")
       },5000);
@@ -49,9 +66,10 @@ function RegisterPage() {
                 {errors.password_confirm && errors.password_confirm.type === "required" && <p>This password confirm field is required</p>}
                 {errors.password_confirm && errors.password_confirm.type === "validate" && <p>The passwords do not match</p>}
                 {errorFromSubmit&&<p>{errorFromSubmit}</p>}
-                <input type="submit"/>
+                <input type="submit" disabled={loading}/>
+                <Link style={{color:'gray', textDecoration:'none'}} to="/LoginPage">로그인하기</Link>
             </form>
-            <Link style={{color:'gray', textDecoration:'none'}} to="/LoginPage">이미 아이디가 있다면..</Link>
+            
         </div>
     )
 }
