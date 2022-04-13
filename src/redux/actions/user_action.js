@@ -49,3 +49,9 @@ export function boardRead(brdno){
     brdno:brdno
   }
 }
+
+export function boardlist(){
+  return{
+    type:BOARD_LIST,
+  }
+}
