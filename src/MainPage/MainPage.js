@@ -5,10 +5,12 @@ import { Link } from 'react-router-dom';
 import {useSelector} from "react-redux";
 
 function MainPage() {
-  const boards=useSelector(state=>state.user.boards);
+  let boards=useSelector(state=>state.user.boards);
   const maxNo=useSelector(state=>state.user.maxNo);
-  console.log(useSelector(state=>state));
 
+  if(boards.length>1&&boards[0].no==0){
+    boards.shift();
+  }
   const handleLogout=()=>{
     const auth=getAuth();
     signOut(auth).then(()=>{
@@ -25,24 +27,25 @@ function MainPage() {
         <Link style={{color:'gray', textDecoration:'none'}} to="/AddPage">생성하기</Link>
       </div>
       <div>
-        <ul>
-        {maxNo!==1?boards&&boards.map((rowData)=>(
-        
-         
-             <li key={rowData.no}>
+        {/*틀 만들기/생성부분 입력부분에 맞는 라이브러리 추가하기 */}
+        {maxNo!==1?boards&&boards.map((rowData)=>( 
+          <div key={rowData.no}>
+            <li>
                 {rowData.no}
                 {rowData.place}
                 {rowData.distance}
                 {rowData.people}
+                {rowData.time.toLocaleDateString()}
              </li>
-                
+             <button>sd</button>
+          </div>
+             
+             
             )):
             <li>아직 모임이 없습니다.
             </li>
-            
-           
         }
-        </ul>
+        
       </div>
     </div>
   )
