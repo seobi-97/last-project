@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import MapContainer from './MapContainer';
 
-function Searchplace() {
+const Searchplace=({place1,getData1}) =>{
   const [inputText, setInputText]=useState("");
   const [place,setPlace]=useState("카카오");
-
+  const [placedata,setplacedata]=useState("");
+  
   const onChange=(e)=>{
     setInputText(e.target.value);
   }
@@ -13,6 +14,11 @@ function Searchplace() {
     setPlace(inputText);
     setInputText("");
   };
+  const getData=(placedata)=>{
+    setplacedata(placedata);
+    getData1(placedata);
+    console.log(placedata);
+  }
   return (
     <>
     
@@ -24,7 +30,7 @@ function Searchplace() {
       />
       <button type="submit">검색</button>
     </form>
-    <MapContainer searchPlace={place}/> 
+    <MapContainer searchPlace={place} placedata={placedata} getData={getData}/> 
     </>
   )
 }

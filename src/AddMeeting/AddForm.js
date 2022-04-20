@@ -54,7 +54,9 @@ function AddForm() {
   const handlepeople=(e)=>{
     setpeople(e.target.value)
   }
-
+  const getData1=(place)=>{
+    setplace(place);
+  }
   
   return (
     <div className="addpage">
@@ -66,13 +68,12 @@ function AddForm() {
       </div>
       <div style={{width:'300px',height:'300px'}}>
         <DatePicker  selected={time} onChange={date=>settime(date)}/>
-      
       </div>
       <div>
         <br/>
         <label>Place</label>
         <br/>
-        <Searchplace/>
+        <Searchplace place1={place} getData1={getData1}/>
       </div>
       <div>
         <br/>

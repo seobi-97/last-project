@@ -2,7 +2,7 @@ import React,{useEffect} from 'react';
 const {kakao}=window;
 
 const MapContainer = ({
-  searchPlace
+  searchPlace, placedata, getData
 }) => {
   useEffect(() => {
     let container = document.getElementById("map");
@@ -41,8 +41,8 @@ const MapContainer = ({
       kakao.maps.event.addListener(marker, 'click', function() {
         infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
         infowindow.open(map, marker);
-        var latlng=place.place_name;
-        console.log(latlng);
+        getData(place.place_name);
+
       });
       //지도에 클릭이벤트 등록
       kakao.maps.event.addListener(map,'click',function(mouseEvent){
