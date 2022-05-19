@@ -55,3 +55,44 @@ export function boardlist(){
     type:BOARD_LIST,
   }
 }
+
+/*export function firebase_board_list(){
+  return(dispatch)=>{
+    return firestore.collection('boards').orderBy("brddate","desc").get()
+      .then((snapshot)=>{
+        var rows=[];
+        snapshot.forEach((doc)=>{
+          var childData=doc.data();
+          childData.brddate=dateFormat(childData.brddate,"yyyy-mm-dd");
+          rows.push(childData);
+        })
+        dispatch(boardlist(rows));
+      })
+  }
+}
+export function firebase_board_remove(brdno={}){
+  return(dispatch)=>{
+    console.log(brdno);
+    return firestore.collection('boards'.doc(brdno).delete().then(()=>{
+      dispatch(boardRemove(brdno));
+    }))
+  }
+}
+
+export function firebase_board_save(data={}){
+  return(dispatch)=>{
+    if(!data.brdno){
+      var doc = firestore.collection('boards').doc();
+      data.brdno=doc.id;
+      data.brddate=Date.now();
+      return doc.set(data).then(()=>{
+        data.brddate=dateFormat(data.brddate,"yyyy-mm-dd");
+        dispatch(boardSave(data));
+      })
+    }else{
+      return firestore.collection('boards').doc(data.brdno).update(data).then(()=>{
+        dispatch(boardSave(data));
+      })
+    }
+  }
+}*/

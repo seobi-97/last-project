@@ -2,7 +2,6 @@ import React ,{ useState} from 'react';
 import { connect } from 'react-redux';
 import AddForm from './AddForm';
 
-
 function AddPage(props) {
   const [boards,setboards]=useState(props);
   return (

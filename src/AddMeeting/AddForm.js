@@ -7,33 +7,64 @@ import "react-datepicker/dist/react-datepicker.css";
 import {useNavigate} from "react-router-dom";
 import { map } from '@firebase/util';
 import Searchplace from './Searchplace';
+import firebase from '../firebase';
+import { DataSnapshot, getDatabase, onChildAdded, ref, set } from 'firebase/database';
 
-
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import md5 from 'md5';
 
 function AddForm() {
   const { register, formState: {errors}, handleSubmit } = useForm();
   const [errorFromSubmit, setErrorFromSubmit]=useState("");
   const [loading, setLoading] =useState(false);
 
-  
+  const [count,setcount]=useState(0);
+  const [boardRef, setboardRef]=useState(ref(getDatabase(),"board"));
   const [time, settime]=useState("");
   const [place, setplace]=useState("");
   const [distance, setdistance]=useState("");
   const [people, setpeople]=useState("");
 
+
   const dispatch=useDispatch();
   let navigate=useNavigate();
 
-  const onSave=()=>{
+  useEffect(()=>{
+    AddBoardListeners();
+  },[])
+  //데이터베이스 board값 가져오기
+  const AddBoardListeners=()=>{
+    let boardArray=[];
+    onChildAdded(boardRef,DataSnapshot=>{
+      boardArray.push(DataSnapshot.val());
+      //setboardRef(boardArray)
+      console.log(boardArray);
+      console.log(boardArray.length)
+      increase(boardArray)
+    })
+  }
+  const increase=(boardArray)=>{
+    setcount(count+boardArray.length);console.log(count);
+  }
+
+  const onSave=(e)=>{
     const inputdata={
       time:time,
       place:place,
       distance:distance,
       people:people,
     }
+
     try{
       setLoading(true)
       dispatch(boardSave(inputdata))
+      //고유값을 줘서 데이터베이스에 저장시켜야함, 또한 데이터베이스 어느부분에 저장할 건지
+      set(ref(getDatabase(),`board/${count}`),{
+        time:time.toLocaleDateString(),
+        place:place,
+        distance:distance,
+        people:people,
+      })
       settime("")
       setplace("")
       setdistance("")
@@ -48,6 +79,8 @@ function AddForm() {
       },5000);
     }
   }
+
+  
   const handledistance=(e)=>{
     setdistance(e.target.value)
   }

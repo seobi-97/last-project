@@ -14,6 +14,7 @@ const initializeUserState = {
   maxNo:1, //최대 글 번호
   //게시물 데이터를 보관하는
   boards:[{
+    id:'',
     no:0,
     time:'',
     place:'',

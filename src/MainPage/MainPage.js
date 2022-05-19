@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { getAuth, signOut, updateProfile } from "firebase/auth";
 import { Link } from 'react-router-dom';
 
 import {useSelector} from "react-redux";
+import { DataSnapshot, getDatabase, onChildAdded, ref } from 'firebase/database';
 
 function MainPage() {
   let boards=useSelector(state=>state.user.boards);
   const maxNo=useSelector(state=>state.user.maxNo);
-
+  const [boardRef, setboardRef]=useState(ref(getDatabase(),"board"));
+  console.log(boards);
   if(boards.length>1&&boards[0].no==0){
     boards.shift();
   }
@@ -18,6 +20,24 @@ function MainPage() {
     }).catch((error)=>{
 
     })
+  }
+  useEffect(()=>{
+    AddBoardListeners();
+  },[])
+  //데이터베이스 board값 가져오기
+  const AddBoardListeners=()=>{
+    let boardArray=[];
+    onChildAdded(boardRef,DataSnapshot=>{
+      boardArray.push(DataSnapshot.val());
+      //setboardRef(boardArray)
+      console.log(boardArray);
+    })
+  }
+  const renderBoard=(board)=>{
+    board.length>0&&
+    board.map(row=>(
+      <li>#{row.time}</li>
+    ))
   }
   return (
     <div>
@@ -37,7 +57,7 @@ function MainPage() {
                 {rowData.people}
                 {rowData.time.toLocaleDateString()}
              </li>
-             <button>sd</button>
+             <button>신청</button>
           </div>
              
              
@@ -47,6 +67,9 @@ function MainPage() {
         }
         
       </div>
+      <ul style={{listStyleType:'none', padding:0}}>
+        {renderBoard(boardRef)}
+      </ul>
     </div>
   )
 }
