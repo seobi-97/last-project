@@ -11,7 +11,7 @@ import {
 const initializeUserState = {
   currentUser:null,
   isLoading: true,
-  maxNo:1, //최대 글 번호
+  maxNo:1, 
   //게시물 데이터를 보관하는
   boards:[{
     id:'',
@@ -20,6 +20,7 @@ const initializeUserState = {
     place:'',
     distance:'',
     people:'',
+    participant:"",
     brddate:new Date()
   }],
   //데이터 수정을 위해 현재 선택한 글 정보를 가지는
@@ -53,7 +54,7 @@ export default function (state = initializeUserState, action){
       let maxNo=state.maxNo;
       //brdno값이 없으면 신규이므로 기존 게시물 데이터에 추가해줘야한다.
       if(!data.no){
-        return {maxNo:maxNo+1,boards:boards.concat({...data,no:maxNo, brddate:new Date()}),selectedBoard:{}};
+        return {...state, maxNo:maxNo+1,boards:boards.concat({...data,no:maxNo, brddate:new Date()}),selectedBoard:{}};
       }return {...state,boards:boards.map(row=>data.no===row.no?{...data}:row),selectedBoard:{}};
     case BOARD_REMOVE: 
       return {
@@ -66,9 +67,6 @@ export default function (state = initializeUserState, action){
         ...state, 
         selectedBoard: boards.find(row => row.no === action.no) 
       };
-
-
-  
     default:
       return state;
   }

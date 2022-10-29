@@ -14,6 +14,7 @@ function LoginPage() {
   const onSubmit=async(data)=>{
     try{
       setLoading(true)
+      //FirebaseAuth 로그인 기능 
       await signInWithEmailAndPassword(auth, data.email, data.password);
       setLoading(false)
     }catch(error){
@@ -36,7 +37,7 @@ function LoginPage() {
                 
                 <label>Password</label>
                 <input name="password" type="password" {...register("password", {required:true, pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$/})}/>
-                {errors.password && errors.password.type === "required" && <p>This name field is required</p>}
+                {errors.password && errors.password.type === "required" && <p>This password field is required</p>}
                 {errors.password && errors.password.type === "pattern" && <p>최소 8자에서 최대 16자, 최소 하나의 문자, 하나의 숫자 및 하나의 특수 문자 사용</p>}
                 
                 {errorFromSubmit&&<p>{errorFromSubmit}</p>}

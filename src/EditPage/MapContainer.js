@@ -1,7 +1,9 @@
-import React, { useEffect } from "react";
-const { kakao } = window;
+import React,{useEffect} from 'react';
+const {kakao}=window;
 
-const MapContainer = ({ searchPlace, placedata, getData }) => {
+const MapContainer = ({
+  searchPlace, placedata, getData
+}) => {
   useEffect(() => {
     let container = document.getElementById("map");
     let options = {
@@ -9,14 +11,16 @@ const MapContainer = ({ searchPlace, placedata, getData }) => {
       level: 3,
     };
     let infowindow = new kakao.maps.InfoWindow({
-      zIndex: 1,
+      zIndex: 1
     });
     let map = new kakao.maps.Map(container, options);
 
     const ps = new kakao.maps.services.Places();
     ps.keywordSearch(searchPlace, placeSearchCB);
+    
+    
 
-    function placeSearchCB(data, status, pagination) {
+    function placeSearchCB(data, status, pagination){
       if (status === kakao.maps.services.Status.OK) {
         let bounds = new kakao.maps.LatLngBounds();
         for (let i = 0; i < data.length; i++) {
@@ -27,39 +31,36 @@ const MapContainer = ({ searchPlace, placedata, getData }) => {
       }
     }
     //지도에 마커를 표시하는 함수
-    function displayMarker(place) {
+    function displayMarker(place){
       //마커를 생성하고 지도에 표시
       let marker = new kakao.maps.Marker({
         map: map,
-        position: new kakao.maps.LatLng(place.y, place.x),
+        position: new kakao.maps.LatLng(place.y, place.x)
       });
       //마커에 클릭이벤트를 등록
-      kakao.maps.event.addListener(marker, "click", function () {
-        infowindow.setContent(
-          '<div style="padding:5px;font-size:12px;">' +
-            place.place_name +
-            "</div>"
-        );
+      kakao.maps.event.addListener(marker, 'click', function() {
+        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
         infowindow.open(map, marker);
         getData(place.place_name);
+
       });
       //지도에 클릭이벤트 등록
-      kakao.maps.event.addListener(map, "click", function (mouseEvent) {
-        var latlng = mouseEvent.latLng;
-        var one = latlng.getLat();
-        var two = latlng.getLng();
+      kakao.maps.event.addListener(map,'click',function(mouseEvent){
+        var latlng=mouseEvent.latLng;
+        var one=latlng.getLat();
+        var two=latlng.getLng();
         marker.setPosition(latlng);
-        console.log(one, two);
-      });
+        console.log(one,two);
+      })
     }
 
     console.log("loading kakaomap");
   }, [searchPlace]);
-  return (
-    <div
-      id="map"
-      style={{ marginTop: "20px", width: "400px", height: "400px" }}
-    ></div>
-  );
-};
+  return(
+    <div id='map' style={{width:'500px',height:'500px'}}></div>
+  )
+  
+}
 export default MapContainer;
+
+

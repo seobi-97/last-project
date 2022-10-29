@@ -17,6 +17,7 @@ function RegisterPage() {
     try{
       setLoading(true)
       const auth=getAuth();
+      //FirebaseAuth 회원가입 기능
       let createdUser=await createUserWithEmailAndPassword(auth, data.email,data.password)
       console.log('createdUser',createdUser);
 
@@ -58,7 +59,7 @@ function RegisterPage() {
                 
                 <label>Password</label>
                 <input name="password" type="password" {...register("password", {required:true, pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$/})}/>
-                {errors.password && errors.password.type === "required" && <p>This name field is required</p>}
+                {errors.password && errors.password.type === "required" && <p>This password field is required</p>}
                 {errors.password && errors.password.type === "pattern" && <p>최소 8자에서 최대 16자, 최소 하나의 문자, 하나의 숫자 및 하나의 특수 문자 사용</p>}
                 
                 <label>Password Confirm</label>
