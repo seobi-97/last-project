@@ -176,10 +176,11 @@ li {
   margin: 0 auto;
 }
 .profile {
-  width: 400px;
-  height: 400px;
+  width: 350px;
+  height: 350px;
   align-items: center;
   border-radius: 70%;
+  border: 2px solid #d0d7de;
   overflow: hidden;
   margin: 0 auto;
 }
@@ -196,7 +197,7 @@ li {
 }
 .profiletext {
   width: 500px;
-  height: 400px;
+  height: 200px;
   align-items: center;
   margin: 0 auto;
 }

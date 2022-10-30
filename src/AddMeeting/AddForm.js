@@ -8,7 +8,6 @@ import { map } from "@firebase/util";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Searchplace from "./Searchplace";
-import firebase from "../firebase";
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -20,12 +19,6 @@ import {
   ref,
   set,
 } from "firebase/database";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
-import md5 from "md5";
 
 function AddForm() {
   const {
@@ -55,12 +48,10 @@ function AddForm() {
     let boardArray = [];
     onChildAdded(boardRef, (DataSnapshot) => {
       boardArray.push(DataSnapshot.val());
-      //setboardRef(boardArray)
-      console.log(boardArray);
-      console.log(boardArray.length);
       increase(boardArray);
     });
   };
+
   //새로 추가를 위한
   const increase = (boardArray) => {
     setcount(count + boardArray.length);
@@ -68,7 +59,6 @@ function AddForm() {
 
   //로그인할때 넘어왔던 값을 이용하기 위해 가져왔다.
   const id = useSelector((state) => state.user.currentUser.email);
-
   const onSave = (e) => {
     const inputdata = {
       id: id,
@@ -78,7 +68,7 @@ function AddForm() {
       place: place,
       distance: distance,
       people: people,
-      participant: "",
+      participant: [],
     };
     try {
       setLoading(true);
@@ -87,11 +77,12 @@ function AddForm() {
       //따로 값을 설정해서 모임을 생성한 사람만이 모임 삭제를 할 수 있어야하며,
       //삭제시 다른 이용자들에게 안내 메세지를 주어야한다.
       //
+      console.log(time);
       set(ref(getDatabase(), `board/${count}`), {
         id: id,
         no: count,
         date: date.toLocaleDateString(),
-        time: time,
+        time: time.toTimeString(),
         place: place,
         distance: distance,
         people: people,
@@ -118,6 +109,8 @@ function AddForm() {
     //문자가 입력되면 값을 반영하지 않는다.
     if (!isFinite(num)) return;
     num = num.toString();
+    //0보다 작은 값이면 안된다.
+    if (num < 0) return;
     //입력받은 숫자가 0이거나 .이 없다면 0으로 시작되는 문자를 지운 상태로 반영
     if (num !== "0" && !num.includes(".")) {
       num = num.replace(/^0+/, "");
@@ -130,6 +123,8 @@ function AddForm() {
     //문자가 입력되면 값을 반영하지 않는다.
     if (!isFinite(num)) return;
     num = num.toString();
+    //0보다 작은 값이면 안된다.
+    if (num < 0) return;
     //입력받은 숫자가 0이거나 .이 없다면 0으로 시작되는 문자를 지운 상태로 반영
     if (num !== "0" && !num.includes(".")) {
       num = num.replace(/^0+/, "");
@@ -180,7 +175,7 @@ function AddForm() {
                   showTimeSelectOnly
                   timeIntervals={10}
                   timeCaption="Time"
-                  dateFormat="aa h:mm"
+                  dateFormat="H:mm"
                 />
               </Grid>
             </Grid>

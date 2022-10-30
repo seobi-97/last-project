@@ -12,6 +12,7 @@ import { Box, TextField } from "@mui/material";
 
 function MyPage() {
   const [Image, setImage] = useState(null);
+  const [Text, setText] = useState(null);
   const fileInput = useRef();
 
   const onChange = async (e) => {
@@ -25,12 +26,15 @@ function MyPage() {
       setImage(reader.result);
     };
   };
-
+  const onChangeText = async (e) => {
+    setText(e.target.value);
+  };
   const id = useSelector((state) => state.user.currentUser.uid);
   const changeImage = async (e) => {
     set(ref(getDatabase(), `users/${id}`), {
       name: "obb",
       image: Image,
+      text: Text,
     });
   };
   return (
@@ -46,9 +50,10 @@ function MyPage() {
           onChange={onChange}
           accept="image/*"
         />
-        <button onClick={() => changeImage()}>등록하기</button>
       </div>
+
       <div className="profiletext">
+        <label>자기소개</label>
         <Box
           component="form"
           sx={{ "& .MuiTextField-root": { m: 1, width: "55ch" } }}
@@ -59,10 +64,12 @@ function MyPage() {
             id="outlined-multiline-flexible"
             multiline
             rows={6}
-            defaultValue="TextField"
+            defaultValue=""
+            onChange={onChangeText}
           />
         </Box>
       </div>
+      <button onClick={() => changeImage()}>등록하기</button>
     </div>
   );
 }

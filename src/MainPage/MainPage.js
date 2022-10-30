@@ -14,6 +14,7 @@ import moment from "moment";
 import "moment/locale/ko";
 import classnames from "classnames";
 import { getCookie, setCookie, removeCookie } from "../Cookies";
+import db from "../firebase";
 
 function MainPage() {
   let boards = useSelector((state) => state.user.boards);
@@ -22,7 +23,7 @@ function MainPage() {
   const id = useSelector((state) => state.user.currentUser);
   //console.log(id.uid);
   //console.log(boards);
-
+  let boardArray = [];
   //현재 days
   const currentDate = moment().format("YYYY-MM-D");
 
@@ -61,18 +62,20 @@ function MainPage() {
       .catch((error) => {});
   };
   //sessionStorge
-  let sessionStorge = window.sessionStorage;
+  let sessionStorage = window.sessionStorage;
 
   useEffect(() => {
     let clean = true;
     //데이터베이스 board값 가져오기
     const AddBoardListeners = () => {
-      let boardArray = [];
       onChildAdded(boardRef, (DataSnapshot) => {
         boardArray.push(DataSnapshot.val());
-        setboard(boardArray);
-        //console.log(boardArray);
+        console.log(boardArray);
         //console.log(board);
+        boardArray.sort((a, b) => new Date(a.time) - new Date(b.time));
+        setboard(boardArray);
+        sessionStorage.setItem("board", JSON.stringify(boardArray));
+        setboard(JSON.parse(sessionStorage.getItem("board")));
       });
     };
     AddBoardListeners();
@@ -81,18 +84,23 @@ function MainPage() {
     };
   }, []);
 
+  /*
+  
+  */
+
   //참가 신청
   const onClick = (data) => {
-    //console.log(data);
+    console.log(id);
+    console.log(data.id);
     //console.log(parseInt(data.people));
     //console.log(data.participant.length);
-    //모임에 설정된 사람 수보다 작아야된다.
+    //모임에 설정된 사람 수보다 현재 신청자수가 더 작아야된다.
     if (parseInt(data.people) > data.participant.length) {
       //참가자와 생성자가 다를 경우
-      if (id !== data.id) {
+      if (id.email !== data.id) {
         set(ref(getDatabase(), `board/${data.no}`), {
           ...data,
-          participant: id,
+          participant: [id.email],
         });
       }
     }
@@ -100,6 +108,7 @@ function MainPage() {
 
   const navigate = useNavigate();
   //수정
+  //데이터를 가져온 페이지에서 수정
   const onClick1 = (data) => {
     if (id == data.id) {
       navigate("/EditPage");
@@ -123,7 +132,7 @@ function MainPage() {
       const participant = data.participant.filter((element) => element !== id);
       set(ref(getDatabase(), `board/${data.no}`), {
         ...data,
-        participant: participant,
+        participant: [participant],
       });
     } else {
       return;
@@ -135,15 +144,16 @@ function MainPage() {
     navigate("/MyPage");
   };
 
-  const test = (e) => {
-    console.log(e.target.value);
-  };
   let [btnActive, setBtnActive] = useState("");
   const clickdate = async (e) => {
     console.log(e.target.value);
+    console.log(matchDays[e.target.value]);
     setBtnActive(e.target.value);
     return e.target.value;
   };
+  //오늘날짜로 filter
+  //값 비교후 filter
+  const filterdate = (data) => {};
   return (
     <div>
       <div className="header">
@@ -209,6 +219,9 @@ function MainPage() {
               <div key={rowData.no}>
                 <li className="listRun">
                   <a>
+                    <div className="listTime">
+                      <p>{rowData.date}</p>
+                    </div>
                     <div className="listTime">
                       <p>{rowData.time}</p>
                     </div>
