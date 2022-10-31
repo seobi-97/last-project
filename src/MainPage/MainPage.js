@@ -15,14 +15,15 @@ import "moment/locale/ko";
 import classnames from "classnames";
 import { getCookie, setCookie, removeCookie } from "../Cookies";
 import db from "../firebase";
+import { jsonEval } from "@firebase/util";
 
 function MainPage() {
   let boards = useSelector((state) => state.user.boards);
   const [boardRef, setboardRef] = useState(ref(getDatabase(), "board"));
   const [board, setboard] = useState(null);
+  const [runlist, setrunlist] = useState(null);
   const id = useSelector((state) => state.user.currentUser);
-  //console.log(id.uid);
-  //console.log(boards);
+  const norun = "모임이 없습니다.";
   let boardArray = [];
   //현재 days
   const currentDate = moment().format("YYYY-MM-D");
@@ -49,7 +50,7 @@ function MainPage() {
       iscurrent: iscurrent,
     });
   }
-  console.log(matchDays);
+  //console.log(matchDays);
   if (boards.length > 1 && boards[0].no == 0) {
     boards.shift();
   }
@@ -70,23 +71,34 @@ function MainPage() {
     const AddBoardListeners = () => {
       onChildAdded(boardRef, (DataSnapshot) => {
         boardArray.push(DataSnapshot.val());
-        console.log(boardArray);
+        //console.log(boardArray);
         //console.log(board);
         boardArray.sort((a, b) => new Date(a.time) - new Date(b.time));
         setboard(boardArray);
         sessionStorage.setItem("board", JSON.stringify(boardArray));
         setboard(JSON.parse(sessionStorage.getItem("board")));
       });
+      const nowTime = moment().format("yyyy. MM. D.");
+      const result = boardArray.filter((board) => board.date == nowTime);
+      sessionStorage.setItem("runlist", JSON.stringify(result));
+      setrunlist(JSON.parse(sessionStorage.getItem("runlist")));
     };
+
     AddBoardListeners();
+    //filterfirstdate();
     return () => {
       clean = false;
     };
   }, []);
 
-  /*
-  
-  */
+  const filterfirstdate = () => {
+    const nowTime = moment().format("yyyy. MM. D.");
+    if (board) {
+      const result = board.filter((board) => board.date == nowTime);
+      sessionStorage.setItem("runlist", JSON.stringify(result));
+      setrunlist(JSON.parse(sessionStorage.getItem("runlist")));
+    }
+  };
 
   //참가 신청
   const onClick = (data) => {
@@ -95,13 +107,20 @@ function MainPage() {
     //console.log(parseInt(data.people));
     //console.log(data.participant.length);
     //모임에 설정된 사람 수보다 현재 신청자수가 더 작아야된다.
-    if (parseInt(data.people) > data.participant.length) {
+    let num = 0;
+    if (data.participant) {
+      num = data.participant.length;
+    }
+    if (parseInt(data.people) > num) {
       //참가자와 생성자가 다를 경우
       if (id.email !== data.id) {
+        //기존 참가자와 신규 참가자를 같이 저장
+        const newparticipant = data.participant.concat(id.email);
         set(ref(getDatabase(), `board/${data.no}`), {
           ...data,
-          participant: [id.email],
+          participant: newparticipant,
         });
+        alert("참가 신청했습니다.");
       }
     }
   };
@@ -118,18 +137,18 @@ function MainPage() {
   };
 
   //취소
-  const isMatch = (element) => {
-    if (element.participant === id) {
-      return true;
-    }
-  };
-  //데이터중에서 유저값과 일치한 값이 있는지
+
+  //특정 result 데이터 선택-> result내 participant에서 유저값이 있으면 그것만 빼기
   const onClick2 = (data) => {
-    const test = data.filter(isMatch);
-    //console.log(test);
-    if (test) {
+    console.log(id.email);
+    console.log(data);
+    const result = JSON.parse(sessionStorage.getItem("runlist"));
+    const isMatch = result.participant.filter((board) => board == id.email);
+    if (isMatch) {
       //특정값 제거
-      const participant = data.participant.filter((element) => element !== id);
+      const participant = data.participant.filter(
+        (element) => element != id.email
+      );
       set(ref(getDatabase(), `board/${data.no}`), {
         ...data,
         participant: [participant],
@@ -139,21 +158,31 @@ function MainPage() {
     }
   };
 
+  let [btnActive, setBtnActive] = useState("");
+  const clickdate = async (e) => {
+    setBtnActive(e.target.value);
+    filterdate(matchDays[e.target.value]);
+    return e.target.value;
+  };
+
+  //오늘날짜로 filter
+  //값 비교후 filter
+  const filterdate = (data) => {
+    const item = data.year + ". " + data.month + ". " + data.day + ".";
+    const result = board.filter((board) => board.date == item);
+    console.log(result);
+    if (result) {
+      sessionStorage.setItem("runlist", JSON.stringify(result));
+    } else {
+      sessionStorage.setItem("runlist", JSON.stringify(norun));
+    }
+
+    setrunlist(JSON.parse(sessionStorage.getItem("runlist")));
+  };
   //mypage이동
   const mypage = () => {
     navigate("/MyPage");
   };
-
-  let [btnActive, setBtnActive] = useState("");
-  const clickdate = async (e) => {
-    console.log(e.target.value);
-    console.log(matchDays[e.target.value]);
-    setBtnActive(e.target.value);
-    return e.target.value;
-  };
-  //오늘날짜로 filter
-  //값 비교후 filter
-  const filterdate = (data) => {};
   return (
     <div>
       <div className="header">
@@ -214,8 +243,8 @@ function MainPage() {
         </div>
         <ul>
           {/*틀 만들기/생성부분 입력부분에 맞는 라이브러리 추가하기 */}
-          {board &&
-            board.map((rowData) => (
+          {JSON.parse(sessionStorage.getItem("runlist")) &&
+            JSON.parse(sessionStorage.getItem("runlist")).map((rowData) => (
               <div key={rowData.no}>
                 <li className="listRun">
                   <a>
@@ -231,7 +260,7 @@ function MainPage() {
                       </div>
                     </div>
                     <div className="listDistance">
-                      <p>{rowData.distance}</p>
+                      <p>{rowData.distance + "km"}</p>
                     </div>
                     <div>
                       <button onClick={() => onClick(rowData)}>신청</button>
@@ -243,6 +272,11 @@ function MainPage() {
               </div>
             ))}
         </ul>
+        {!sessionStorage.getItem("runlist") && (
+          <div>
+            <h3>모임이 없습니다</h3>
+          </div>
+        )}
       </div>
     </div>
   );
