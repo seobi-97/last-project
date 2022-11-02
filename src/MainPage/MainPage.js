@@ -13,9 +13,6 @@ import logoimage from "../images/로고2.png";
 import moment from "moment";
 import "moment/locale/ko";
 import classnames from "classnames";
-import { getCookie, setCookie, removeCookie } from "../Cookies";
-import db from "../firebase";
-import { jsonEval } from "@firebase/util";
 
 function MainPage() {
   let boards = useSelector((state) => state.user.boards);
@@ -64,7 +61,6 @@ function MainPage() {
   };
   //sessionStorge
   let sessionStorage = window.sessionStorage;
-
   useEffect(() => {
     let clean = true;
     //데이터베이스 board값 가져오기
@@ -77,51 +73,69 @@ function MainPage() {
         setboard(boardArray);
         sessionStorage.setItem("board", JSON.stringify(boardArray));
         setboard(JSON.parse(sessionStorage.getItem("board")));
+        //console.log(boardArray);
+        filterfirstdate(boardArray);
       });
-      const nowTime = moment().format("yyyy. MM. D.");
-      const result = boardArray.filter((board) => board.date == nowTime);
-      sessionStorage.setItem("runlist", JSON.stringify(result));
-      setrunlist(JSON.parse(sessionStorage.getItem("runlist")));
     };
 
     AddBoardListeners();
-    //filterfirstdate();
     return () => {
       clean = false;
     };
   }, []);
 
-  const filterfirstdate = () => {
+  //filter를 통한 오늘 날짜 모임 가져오기
+  const filterfirstdate = (boardArray) => {
     const nowTime = moment().format("yyyy. MM. D.");
-    if (board) {
-      const result = board.filter((board) => board.date == nowTime);
+    if (boardArray) {
+      const result = boardArray.filter((board) => board.date == nowTime);
       sessionStorage.setItem("runlist", JSON.stringify(result));
       setrunlist(JSON.parse(sessionStorage.getItem("runlist")));
     }
   };
 
   //참가 신청
-  const onClick = (data) => {
-    console.log(id);
-    console.log(data.id);
-    //console.log(parseInt(data.people));
-    //console.log(data.participant.length);
-    //모임에 설정된 사람 수보다 현재 신청자수가 더 작아야된다.
+  const application = (data) => {
     let num = 0;
+    //참가자 수
     if (data.participant) {
       num = data.participant.length;
+      console.log(num);
     }
+
+    //모임에 설정된 사람 수보다 현재 신청자수가 더 작아야된다.
     if (parseInt(data.people) > num) {
       //참가자와 생성자가 다를 경우
       if (id.email !== data.id) {
-        //기존 참가자와 신규 참가자를 같이 저장
-        const newparticipant = data.participant.concat(id.email);
-        set(ref(getDatabase(), `board/${data.no}`), {
-          ...data,
-          participant: newparticipant,
-        });
-        alert("참가 신청했습니다.");
+        //첫순서로 신청하는 경우
+        if (data.participant === undefined) {
+          set(ref(getDatabase(), `board/${data.no}`), {
+            ...data,
+            participant: [id.email],
+          });
+          alert("참가 신청");
+        } else {
+          let res = data.participant.find((element) => {
+            return element == id.email;
+          });
+          if (res !== undefined) {
+            alert("이미 참가중입니다.");
+          } else {
+            //기존 참가자와 신규 참가자를 같이 저장
+            const newparticipant = data.participant.concat(id.email);
+            console.log(newparticipant);
+            set(ref(getDatabase(), `board/${data.no}`), {
+              ...data,
+              participant: newparticipant,
+            });
+            alert("참가 신청");
+          }
+        }
+      } else {
+        alert("모임 생성자입니다.");
       }
+    } else {
+      alert("참가 인원 초과");
     }
   };
 
@@ -139,11 +153,13 @@ function MainPage() {
   //취소
 
   //특정 result 데이터 선택-> result내 participant에서 유저값이 있으면 그것만 빼기
-  const onClick2 = (data) => {
-    console.log(id.email);
-    console.log(data);
-    const result = JSON.parse(sessionStorage.getItem("runlist"));
-    const isMatch = result.participant.filter((board) => board == id.email);
+  const remove = (data) => {
+    const board = JSON.parse(sessionStorage.getItem("board"));
+    console.log(board[data.no].participant);
+    const isMatch = board[data.no].participant.filter(
+      (board) => board == id.email
+    );
+    console.log(isMatch);
     if (isMatch) {
       //특정값 제거
       const participant = data.participant.filter(
@@ -151,10 +167,11 @@ function MainPage() {
       );
       set(ref(getDatabase(), `board/${data.no}`), {
         ...data,
-        participant: [participant],
+        participant: participant,
       });
+      alert("취소 완료");
     } else {
-      return;
+      alert("취소 실패");
     }
   };
 
@@ -243,16 +260,16 @@ function MainPage() {
         </div>
         <ul>
           {/*틀 만들기/생성부분 입력부분에 맞는 라이브러리 추가하기 */}
-          {JSON.parse(sessionStorage.getItem("runlist")) &&
-            JSON.parse(sessionStorage.getItem("runlist")).map((rowData) => (
+          {runlist &&
+            runlist.map((rowData) => (
               <div key={rowData.no}>
                 <li className="listRun">
                   <a>
                     <div className="listTime">
-                      <p>{rowData.date}</p>
-                    </div>
-                    <div className="listTime">
                       <p>{rowData.time}</p>
+                    </div>
+                    <div className="listId">
+                      <p>{rowData.id}</p>
                     </div>
                     <div className="listPlace">
                       <div className="matchTitle">
@@ -263,9 +280,9 @@ function MainPage() {
                       <p>{rowData.distance + "km"}</p>
                     </div>
                     <div>
-                      <button onClick={() => onClick(rowData)}>신청</button>
-                      <button onClick={() => onClick2(rowData)}>취소</button>
-                      <button onClick={() => onClick1(rowData)}>수정</button>
+                      <button onClick={() => application(rowData)}>신청</button>
+                      <button onClick={() => remove(rowData)}>취소</button>
+                      {/*<button onClick={() => onClick1(rowData)}>수정</button>*/}
                     </div>
                   </a>
                 </li>

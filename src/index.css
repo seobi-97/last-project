@@ -176,8 +176,8 @@ li {
   margin: 0 auto;
 }
 .profile {
-  width: 350px;
-  height: 350px;
+  width: 500px;
+  height: 500px;
   align-items: center;
   border-radius: 70%;
   border: 2px solid #d0d7de;
@@ -472,8 +472,14 @@ li {
   text-align: center;
   font-size: 15px;
 }
+.listRun .listId {
+  width: 20%;
+  font-weight: 500;
+  text-align: center;
+  font-size: 15px;
+}
 .listRun .listPlace {
-  width: 52%;
+  width: 32%;
   text-align: center;
   padding-right: 10px;
 }
@@ -483,7 +489,7 @@ li {
   word-break: keep-all;
 }
 .listRun .listDistance {
-  width: 10%;
+  width: 13%;
   font-weight: 500;
   text-align: center;
   font-size: 15px;
