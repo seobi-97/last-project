@@ -1,25 +1,26 @@
 import React, { useState, useRef } from "react";
-import profile from "../images/기본사용자.png";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setPhotoURL } from "../redux/actions/user_action";
 import { DataSnapshot, getDatabase, ref, update, set } from "firebase/database";
 import { getAuth, signOut, updateProfile } from "firebase/auth";
+import logoimage from "../images/로고2.png";
+
 import {
   getStorage,
   ref as strRef,
   getDownloadURL,
   uploadBytesResumable,
 } from "firebase/storage";
-import { Box, TextField } from "@mui/material";
-//import mime from "mime-types";
-
 function MyPage() {
-  const [Image, setImage] = useState(null);
+  const [change, setchange] = useState(null);
   const [Text, setText] = useState(null);
   const fileInput = useRef();
+  const inputOpenImageRef = useRef();
   const user = useSelector((state) => state.user.currentUser);
+  console.log(user.photoURL);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const onChange = async (e) => {
     e.preventDefault();
     const reader = new FileReader();
@@ -28,31 +29,26 @@ function MyPage() {
     reader.readAsDataURL(file);
     //이미지 주소
     reader.onloadend = () => {
-      setImage(reader.result);
+      setchange(reader.result);
     };
   };
 
+  const handleOpenImageRef = () => {
+    inputOpenImageRef.current.click();
+  };
   const onChangeText = async (e) => {
     setText(e.target.value);
   };
   const id = useSelector((state) => state.user.currentUser.uid);
-  const changeImage = async (e) => {
-    set(ref(getDatabase(), `users/${id}`), {
-      name: "obb",
-      image: Image,
-      text: Text,
-    });
-  };
-  {
-    /*
-    const changeImage2 = async (e) => {
-    const file = e.target.files[0];
+  const handleUploadImage = async (event) => {
+    console.log(event.target);
+    const file = event.target.files[0];
     const auth = getAuth();
     const user = auth.currentUser;
 
-    const metadata = { contentType: mime.lookup(file.name) };
+    const metadata = { contentType: file.type };
     const storage = getStorage();
-
+    // https://firebase.google.com/docs/storage/web/upload-files#full_example
     try {
       //스토리지에 파일 저장하기
       let uploadTask = uploadBytesResumable(
@@ -78,6 +74,7 @@ function MyPage() {
           }
         },
         (error) => {
+          console.log(error);
           // A full list of error codes is available at
           // https://firebase.google.com/docs/storage/web/handle-errors
           switch (error.code) {
@@ -98,6 +95,7 @@ function MyPage() {
         () => {
           // Upload completed successfully, now we can get the download URL
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log(downloadURL);
             // 프로필 이미지 수정
             updateProfile(user, {
               photoURL: downloadURL,
@@ -117,55 +115,73 @@ function MyPage() {
       console.log(error);
     }
   };
-    */
-  }
+  //로그아웃
+  const handleLogout = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {})
+      .catch((error) => {});
+  };
+  //mainpage이동
+  const mainpage = () => {
+    navigate("/");
+  };
+  //mypage이동
+  const mypage = () => {
+    navigate("/MyPage");
+  };
+  const mygroup = () => {
+    navigate("/MyGroup");
+  };
+  const joingroup = () => {
+    navigate("/JoinGroup");
+  };
 
   return (
-    <div className="profileform">
-      <div className="profile">
-        <img className="profileImg" src={Image ? Image : profile}></img>
+    <div>
+      <div className="header">
+        <img src={logoimage} />
+        <nav>
+          <ul>
+            <li>
+              <a onClick={() => mainpage()}>Home</a>
+            </li>
+            <li className="active">
+              <a onClick={() => mypage()}>MyPage</a>
+            </li>
+            <li>
+              <a onClick={() => handleLogout()}>Logout</a>
+            </li>
+          </ul>
+        </nav>
       </div>
-      <div className="profileupload">
+      <div className="profileform">
+        <div className="profile">
+          <img
+            className="profileImg"
+            src={change ? change : user.photoURL}
+          ></img>
+        </div>
+        <div className="username">
+          <p>{user.displayName}님 반갑습니다</p>
+        </div>
+        <div className="profileupload">
+          <button onClick={handleOpenImageRef}>프로필 사진 변경</button>
+        </div>
         <input
-          ref={fileInput}
+          onChange={handleUploadImage}
+          accept="image/jpeg, image/png"
+          style={{ display: "none" }}
+          ref={inputOpenImageRef}
           type="file"
-          name="file"
-          onChange={onChange}
-          accept="image/*"
         />
+        <div>
+          <p onClick={() => mygroup()}>생성 모임 내역</p>
+        </div>
+        <div>
+          <p onClick={() => joingroup()}>참가 모임 내역</p>
+        </div>
       </div>
-      {/*<div className="profile">
-        <img className="profileImg" src={user && user.photoURL} />
-      </div>
-      <div className="profileupload">
-        <input
-          ref={fileInput}
-          type="file"
-          name="file"
-          onChange={onChange}
-          accept="image/*"
-        />
-      </div>
-        */}
-
-      <div className="profiletext">
-        <label>자기소개</label>
-        <Box
-          component="form"
-          sx={{ "& .MuiTextField-root": { m: 1, width: "55ch" } }}
-          noValidate
-          autoComplete="off"
-        >
-          <TextField
-            id="outlined-multiline-flexible"
-            multiline
-            rows={6}
-            defaultValue=""
-            onChange={onChangeText}
-          />
-        </Box>
-      </div>
-      <button onClick={() => changeImage()}>등록하기</button>
     </div>
   );
 }

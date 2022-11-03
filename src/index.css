@@ -171,17 +171,21 @@ li {
 }
 
 .profileform {
-  width: 500px;
+  width: 700px;
   height: 700px;
   margin: 0 auto;
+  padding-top: 15px;
 }
 .profile {
-  width: 500px;
-  height: 500px;
-  align-items: center;
+  width: 150px;
+  height: 150px;
+  align-items: flex-start;
   border-radius: 70%;
   border: 2px solid #d0d7de;
   overflow: hidden;
+}
+.username {
+  align-items: center;
   margin: 0 auto;
 }
 .profileImg {
@@ -190,10 +194,11 @@ li {
   object-fit: cover;
 }
 .profileupload {
-  width: 400px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   align-items: center;
   margin: 0 auto;
+  padding-top: 15px;
 }
 .profiletext {
   width: 500px;
