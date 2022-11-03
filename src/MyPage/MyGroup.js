@@ -8,7 +8,12 @@ import {
   onChildAdded,
   ref,
   set,
+  child,
+  remove,
+  update,
+  get,
 } from "firebase/database";
+import firebase from "../firebase";
 import logoimage from "../images/로고2.png";
 import moment from "moment";
 import "moment/locale/ko";
@@ -20,6 +25,7 @@ function MyGroup() {
   const [runlist, setrunlist] = useState(null);
   const id = useSelector((state) => state.user.currentUser);
   const norun = "모임이 없습니다.";
+  const usersRef = ref(getDatabase(), "board");
   let boardArray = [];
   //현재 days
   const currentDate = moment().format("YYYY-MM-D");
@@ -106,11 +112,14 @@ function MyGroup() {
   //취소
 
   //특정 result 데이터 선택-> result내 participant에서 유저값이 있으면 그것만 빼기
+
   const remove = (data) => {
     const board = JSON.parse(sessionStorage.getItem("board"));
     console.log(board[data.no]);
-
-    set(ref(getDatabase(), `board/${data.no}`), {});
+    const newdata = board.filter((board) => board.no != data.no);
+    console.log(newdata);
+    //remove(ref(getDatabase(), `board/${data.no}`));
+    //set(ref(getDatabase(), `board/${data.no}`), {});
   };
 
   //mainpage이동

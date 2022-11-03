@@ -5,13 +5,17 @@ import { setPhotoURL } from "../redux/actions/user_action";
 import { DataSnapshot, getDatabase, ref, update, set } from "firebase/database";
 import { getAuth, signOut, updateProfile } from "firebase/auth";
 import logoimage from "../images/로고2.png";
-
+import { TbClick } from "react-icons/tb";
 import {
   getStorage,
   ref as strRef,
   getDownloadURL,
   uploadBytesResumable,
 } from "firebase/storage";
+
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Unstable_Grid2";
+import Container from "@mui/material/Container";
 function MyPage() {
   const [change, setchange] = useState(null);
   const [Text, setText] = useState(null);
@@ -155,31 +159,42 @@ function MyPage() {
           </ul>
         </nav>
       </div>
-      <div className="profileform">
-        <div className="profile">
-          <img
-            className="profileImg"
-            src={change ? change : user.photoURL}
-          ></img>
-        </div>
-        <div className="username">
-          <p>{user.displayName}님 반갑습니다</p>
-        </div>
-        <div className="profileupload">
-          <button onClick={handleOpenImageRef}>프로필 사진 변경</button>
-        </div>
-        <input
-          onChange={handleUploadImage}
-          accept="image/jpeg, image/png"
-          style={{ display: "none" }}
-          ref={inputOpenImageRef}
-          type="file"
-        />
-        <div>
-          <p onClick={() => mygroup()}>생성 모임 내역</p>
-        </div>
-        <div>
-          <p onClick={() => joingroup()}>참가 모임 내역</p>
+      <div className="WhiteBox">
+        <div className="MyPageFormBlock">
+          <div className="LineBlock">
+            <div className="FullLine">
+              <div className="profile">
+                <img
+                  className="profileImg"
+                  src={change ? change : user.photoURL}
+                ></img>
+              </div>
+              <div className="TextBox">
+                <p>{user.displayName}님 반갑습니다</p>
+                <div className="profileupload">
+                  <button className="w-btn" onClick={handleOpenImageRef}>
+                    프로필 사진 변경
+                  </button>
+                </div>
+                <input
+                  onChange={handleUploadImage}
+                  accept="image/jpeg, image/png"
+                  style={{ display: "none" }}
+                  ref={inputOpenImageRef}
+                  type="file"
+                />
+                <div></div>
+              </div>
+            </div>
+            <div className="HalfLine">
+              <p onClick={() => mygroup()}>생성 모임 내역 </p>
+              <TbClick />
+            </div>
+            <div className="HalfLine">
+              <p onClick={() => joingroup()}>참가 모임 내역 </p>
+              <TbClick />
+            </div>
+          </div>
         </div>
       </div>
     </div>

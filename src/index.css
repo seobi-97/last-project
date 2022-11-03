@@ -194,8 +194,8 @@ li {
   object-fit: cover;
 }
 .profileupload {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   align-items: center;
   margin: 0 auto;
   padding-top: 15px;
@@ -214,8 +214,8 @@ li {
   width: 100%;
   height: 150px;
   background: white;
-  padding-left: 100px;
-  padding-right: 100px;
+  padding-left: 150px;
+  padding-right: 150px;
 }
 .header img {
   width: 250px;
@@ -454,8 +454,10 @@ li {
   height: 50px;
   margin: 0 auto;
 }
+
 .link {
-  color: gray;
+  font-size: 18px;
+  color: #7f8b98;
   text-decoration: none;
   float: right;
 }
@@ -484,20 +486,87 @@ li {
   font-size: 15px;
 }
 .listRun .listPlace {
-  width: 32%;
+  width: 30%;
   text-align: center;
-  padding-right: 10px;
-}
-.listRun .listPlace h3 {
   font-size: 15px;
   font-weight: 500;
-  word-break: keep-all;
 }
 .listRun .listDistance {
   width: 13%;
   font-weight: 500;
   text-align: center;
   font-size: 15px;
+}
+.listRun .listButton {
+  width: 20%;
+  text-align: center;
+}
+.norun {
+  text-align: center;
+  font-size: 19px;
+}
+
+.w-btn {
+  position: relative;
+  border: none;
+  display: inline-block;
+  padding: 15px 30px;
+  border-radius: 15px;
+  font-family: "paybooc-Light", sans-serif;
+  text-decoration: none;
+  font-weight: 700;
+  transition: 0.25s;
+}
+.w-btn-blue:hover,
+.w-btn-pink:hover {
+  letter-spacing: 2px;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+.w-btn-blue {
+  background-color: #6aafe6;
+  color: #d4dfe6;
+}
+.w-btn-pink {
+  background-color: #f199bc;
+  color: #d4dfe6;
+}
+
+.textRun a {
+  border-bottom: 1px solid #7f8b98;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  padding: 20px 15px;
+}
+.textRun .textTime {
+  width: 15%;
+  font-weight: 700;
+  text-align: center;
+  font-size: 15px;
+}
+.textRun .textId {
+  width: 20%;
+  font-weight: 500;
+  text-align: center;
+  font-size: 15px;
+}
+.textRun .textPlace {
+  width: 30%;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+}
+.textRun .textDistance {
+  width: 13%;
+  font-weight: 500;
+  text-align: center;
+  font-size: 15px;
+}
+.textRun .textButton {
+  width: 20%;
+  text-align: center;
 }
 
 .add {
@@ -609,4 +678,57 @@ li {
 
 .addForm hr {
   margin-top: 30px;
+}
+
+.WhiteBox {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  padding-top: 50px;
+  margin: 0 auto;
+  width: 100%;
+}
+.MyPageFormBlock {
+  width: 50%;
+  height: 400px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+}
+.LineBlock {
+  width: 100%;
+  padding: 0;
+  margin: 0 auto;
+}
+.FullLine {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 200px;
+  border-bottom: 2px solid #dcdcdc;
+  margin: 0 auto;
+}
+.TextBox {
+  margin-left: 50px;
+  font-size: 20px;
+}
+.TextBox button {
+  cursor: pointer;
+}
+.HalfLine {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  border-bottom: 2px solid #dcdcdc;
+  padding: 0;
+  margin: 0;
+}
+.HalfLine p {
+  cursor: pointer;
 }

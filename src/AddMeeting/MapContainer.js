@@ -44,13 +44,16 @@ const MapContainer = ({ searchPlace, placedata, getData }) => {
         getData(place.place_name);
       });
       //지도에 클릭이벤트 등록
-      kakao.maps.event.addListener(map, "click", function (mouseEvent) {
+      {
+        /* kakao.maps.event.addListener(map, "click", function (mouseEvent) {
         var latlng = mouseEvent.latLng;
         var one = latlng.getLat();
         var two = latlng.getLng();
         marker.setPosition(latlng);
         console.log(one, two);
       });
+        */
+      }
     }
 
     console.log("loading kakaomap");

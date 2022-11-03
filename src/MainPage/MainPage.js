@@ -70,7 +70,7 @@ function MainPage() {
         boardArray.push(DataSnapshot.val());
         //console.log(boardArray);
         //console.log(board);
-        boardArray.sort((a, b) => new Date(a.time) - new Date(b.time));
+        boardArray.sort((a, b) => new Date(a.date) - new Date(b.date));
         setboard(boardArray);
         sessionStorage.setItem("board", JSON.stringify(boardArray));
         setboard(JSON.parse(sessionStorage.getItem("board")));
@@ -90,6 +90,9 @@ function MainPage() {
     const nowTime = moment().format("yyyy. MM. D.");
     if (boardArray) {
       const result = boardArray.filter((board) => board.date == nowTime);
+      result.sort((a, b) => a.time.substr(3, 2) - b.time.substr(3, 2));
+      result.sort((a, b) => a.time.substr(0, 2) - b.time.substr(0, 2));
+
       sessionStorage.setItem("runlist", JSON.stringify(result));
       setrunlist(JSON.parse(sessionStorage.getItem("runlist")));
     }
@@ -254,9 +257,32 @@ function MainPage() {
       <div id="list" className="listContainer">
         <div className="addproject">
           <Link className="link" to="/AddPage">
-            모임 생성하기
+            ✔ 모임 생성하기
           </Link>
         </div>
+        <ul>
+          <div>
+            <li className="textRun">
+              <a>
+                <div className="textTime">
+                  <p>시간</p>
+                </div>
+                <div className="textId">
+                  <p>리더</p>
+                </div>
+                <div className="textPlace">
+                  <p>장소</p>
+                </div>
+                <div className="textDistance">
+                  <p>거리</p>
+                </div>
+                <div className="textButton">
+                  <p>신청유무</p>
+                </div>
+              </a>
+            </li>
+          </div>
+        </ul>
         <ul>
           {/*틀 만들기/생성부분 입력부분에 맞는 라이브러리 추가하기 */}
           {runlist && runlist.length != 0 ? (
@@ -265,22 +291,30 @@ function MainPage() {
                 <li className="listRun">
                   <a>
                     <div className="listTime">
-                      <p>{rowData.time}</p>
+                      <p>{rowData.time.substr(0, 8)}</p>
                     </div>
                     <div className="listId">
                       <p>{rowData.id}</p>
                     </div>
                     <div className="listPlace">
-                      <div className="matchTitle">
-                        <h3>{rowData.place}</h3>
-                      </div>
+                      <p>{rowData.place}</p>
                     </div>
                     <div className="listDistance">
                       <p>{rowData.distance + "km"}</p>
                     </div>
-                    <div>
-                      <button onClick={() => application(rowData)}>신청</button>
-                      <button onClick={() => remove(rowData)}>취소</button>
+                    <div className="listButton">
+                      <button
+                        className="w-btn w-btn-blue"
+                        onClick={() => application(rowData)}
+                      >
+                        신청
+                      </button>
+                      <button
+                        className="w-btn w-btn-pink"
+                        onClick={() => remove(rowData)}
+                      >
+                        취소
+                      </button>
                       {/*<button onClick={() => onClick1(rowData)}>수정</button>*/}
                     </div>
                   </a>
@@ -289,7 +323,7 @@ function MainPage() {
             ))
           ) : (
             <div>
-              <li className="listRun">
+              <li className="norun">
                 <p>모임이 없습니다</p>
               </li>
             </div>
