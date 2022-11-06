@@ -86,13 +86,21 @@ function JoinGroup() {
 
   //filter를 통한 내 참가 내역 가져오기
   const filterfirstdate = (boardArray) => {
+    let result = [];
+    let result2 = [];
     if (boardArray) {
+      //모든 모임들을 검사한다.
       for (var i = 0; i < boardArray.length; i++) {
+        //참가자가 있는 경우
         if (boardArray[i].participant !== undefined) {
-          let res = boardArray[i].participant.find((element) => {
-            return element == id.email;
-          });
-          console.log(res);
+          //pariticipant 요소 중에 자신의 id가 있는지 확인
+          let res = boardArray[i].participant.find(
+            (element) => element == id.email
+          );
+          if (res) {
+            result.push(boardArray[i]);
+          }
+        } else {
         }
       }
 
@@ -105,6 +113,10 @@ function JoinGroup() {
     */
       }
     }
+    console.log(boardArray);
+    console.log(result);
+    sessionStorage.setItem("runlist", JSON.stringify(result));
+    setrunlist(JSON.parse(sessionStorage.getItem("runlist")));
   };
 
   //수정
@@ -161,7 +173,7 @@ function JoinGroup() {
                       <p>{rowData.date}</p>
                     </div>
                     <div className="listTime">
-                      <p>{rowData.time}</p>
+                      <p>{rowData.time.substr(0, 8)}</p>
                     </div>
                     <div className="listId">
                       <p>{rowData.id}</p>
@@ -173,10 +185,6 @@ function JoinGroup() {
                     </div>
                     <div className="listDistance">
                       <p>{rowData.distance + "km"}</p>
-                    </div>
-                    <div>
-                      <button>삭제</button>
-                      <button>수정</button>
                     </div>
                   </a>
                 </li>

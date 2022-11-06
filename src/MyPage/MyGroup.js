@@ -184,16 +184,19 @@ function MyGroup() {
                       </div>
                     </div>
                     <div className="listPlace">
-                      <div className="matchTitle">
-                        <h3>{rowData.place}</h3>
-                      </div>
+                      <p>{rowData.place}</p>
                     </div>
                     <div className="listDistance">
                       <p>{rowData.distance + "km"}</p>
                     </div>
-                    <div>
-                      <button onClick={() => remove(rowData)}>삭제</button>
-                      <button>수정</button>
+                    <div className="listButton2">
+                      <button className="w-btn w-btn-blue">수정</button>
+                      <button
+                        className="w-btn w-btn-pink"
+                        onClick={() => remove(rowData)}
+                      >
+                        삭제
+                      </button>
                     </div>
                   </a>
                 </li>

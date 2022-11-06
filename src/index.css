@@ -501,6 +501,10 @@ li {
   width: 20%;
   text-align: center;
 }
+.listRun .listButton2 {
+  width: 23%;
+  text-align: center;
+}
 .norun {
   text-align: center;
   font-size: 19px;
