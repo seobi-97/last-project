@@ -168,7 +168,7 @@ function JoinGroup() {
             runlist.map((rowData) => (
               <div key={rowData.no}>
                 <li className="listRun">
-                  <a>
+                  <div className="a">
                     <div className="listTime">
                       <p>{rowData.date}</p>
                     </div>
@@ -186,7 +186,7 @@ function JoinGroup() {
                     <div className="listDistance">
                       <p>{rowData.distance + "km"}</p>
                     </div>
-                  </a>
+                  </div>
                 </li>
               </div>
             ))

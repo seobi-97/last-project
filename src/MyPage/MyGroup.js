@@ -140,6 +140,9 @@ function MyGroup() {
   const mypage = () => {
     navigate("/MyPage");
   };
+  const editpage = (data) => {
+    <Link to={`/EditPage/${data}`}></Link>;
+  };
   return (
     <div>
       <div className="header">
@@ -166,7 +169,7 @@ function MyGroup() {
             runlist.map((rowData) => (
               <div key={rowData.no}>
                 <li className="listRun">
-                  <a>
+                  <div className="a">
                     <div className="listTime">
                       <p>{rowData.date}</p>
                     </div>
@@ -177,7 +180,7 @@ function MyGroup() {
                       <p>{rowData.id}</p>
                       <div className="listParticipant">
                         {rowData.participant ? (
-                          <p>{rowData.participant}</p>
+                          <span>{rowData.participant}</span>
                         ) : (
                           <p></p>
                         )}
@@ -190,7 +193,9 @@ function MyGroup() {
                       <p>{rowData.distance + "km"}</p>
                     </div>
                     <div className="listButton2">
-                      <button className="w-btn w-btn-blue">수정</button>
+                      <Link to={`/EditPage/${rowData.no}`}>
+                        <button className="w-btn w-btn-blue">수정</button>
+                      </Link>
                       <button
                         className="w-btn w-btn-pink"
                         onClick={() => remove(rowData)}
@@ -198,7 +203,7 @@ function MyGroup() {
                         삭제
                       </button>
                     </div>
-                  </a>
+                  </div>
                 </li>
               </div>
             ))

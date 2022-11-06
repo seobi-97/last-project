@@ -107,24 +107,24 @@ function MainPage() {
       console.log(num);
     }
 
-    //모임에 설정된 사람 수보다 현재 신청자수가 더 작아야된다.
-    if (parseInt(data.people) > num) {
-      //참가자와 생성자가 다를 경우
-      if (id.email !== data.id) {
-        //첫순서로 신청하는 경우
-        if (data.participant === undefined) {
-          set(ref(getDatabase(), `board/${data.no}`), {
-            ...data,
-            participant: [id.email],
-          });
-          alert("참가 신청");
+    //참가자와 생성자가 다를 경우
+    if (id.email !== data.id) {
+      //첫순서로 신청하는 경우
+      if (data.participant === undefined) {
+        set(ref(getDatabase(), `board/${data.no}`), {
+          ...data,
+          participant: [id.email],
+        });
+        alert("참가 신청");
+      } else {
+        let res = data.participant.find((element) => {
+          return element == id.email;
+        });
+        if (res !== undefined) {
+          alert("이미 참가중입니다.");
         } else {
-          let res = data.participant.find((element) => {
-            return element == id.email;
-          });
-          if (res !== undefined) {
-            alert("이미 참가중입니다.");
-          } else {
+          //모임에 설정된 사람 수보다 현재 신청자수가 더 작아야된다.
+          if (parseInt(data.people) > num) {
             //기존 참가자와 신규 참가자를 같이 저장
             const newparticipant = data.participant.concat(id.email);
             console.log(newparticipant);
@@ -133,14 +133,15 @@ function MainPage() {
               participant: newparticipant,
             });
             alert("참가 신청");
+          } else {
+            alert("참가 인원 초과");
           }
         }
-      } else {
-        alert("모임 생성자입니다.");
       }
     } else {
-      alert("참가 인원 초과");
+      alert("모임 생성자입니다.");
     }
+
     //페이지를 새로고침해서 업데이트를 해준다.
     window.location.href = "/";
   };
@@ -298,7 +299,7 @@ function MainPage() {
             runlist.map((rowData) => (
               <div key={rowData.no}>
                 <li className="listRun">
-                  <a>
+                  <div className="a">
                     <div className="listTime">
                       <p>{rowData.time.substr(0, 8)}</p>
                     </div>
@@ -326,7 +327,7 @@ function MainPage() {
                       </button>
                       {/*<button onClick={() => onClick1(rowData)}>수정</button>*/}
                     </div>
-                  </a>
+                  </div>
                 </li>
               </div>
             ))

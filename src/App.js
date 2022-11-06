@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser, clearUser } from "./redux/actions/user_action";
 import MyPage from "./MyPage/MyPage";
 import JoinGroup from "./MyPage/JoinGroup";
-
+import EditPage from "./EditPage/AddPage";
 function App(props) {
   const navigate = useNavigate();
   let dispatch = useDispatch();
@@ -51,6 +51,7 @@ function App(props) {
         <Route path="/MyPage" element={<MyPage />} />
         <Route path="/MyGroup" element={<MyGroup />} />
         <Route path="/JoinGroup" element={<JoinGroup />} />
+        <Route path="/EditPage/:no" element={<EditPage />} />
       </Routes>
     );
   }

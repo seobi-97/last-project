@@ -25,7 +25,9 @@ ul,
 li {
   list-style: none;
 }
-
+a {
+  text-decoration: none;
+}
 .auth-wrapper {
   display: flex;
   flex-direction: column;
@@ -465,7 +467,7 @@ li {
   max-width: 1024px;
   margin: 0 auto;
 }
-.listRun a {
+.listRun .a {
   border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
