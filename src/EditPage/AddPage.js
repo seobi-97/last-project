@@ -6,7 +6,6 @@ import AddForm from "./AddForm";
 function AddPage(props) {
   const [boards, setboards] = useState(props);
   const { no } = useParams();
-  console.log(no);
   //sessionStorge
   let sessionStorage = window.sessionStorage;
   const result = JSON.parse(sessionStorage.getItem("board"));
@@ -17,7 +16,6 @@ function AddPage(props) {
   );
 }
 let mapStateToProps = (state) => {
-  console.log(state);
   return {
     boards: state.boards,
   };

@@ -22,7 +22,6 @@ const Searchplace = ({ place1, getData1 }) => {
   const getData = (placedata) => {
     setplacedata(placedata);
     getData1(placedata);
-    console.log(placedata);
   };
   return (
     <>

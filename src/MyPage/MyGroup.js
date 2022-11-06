@@ -53,7 +53,6 @@ function MyGroup() {
       iscurrent: iscurrent,
     });
   }
-  //console.log(matchDays);
   if (boards.length > 1 && boards[0].no == 0) {
     boards.shift();
   }
@@ -99,29 +98,18 @@ function MyGroup() {
     }
   };
 
-  //수정
-  //데이터를 가져온 페이지에서 수정
-  const onClick1 = (data) => {
-    if (id == data.id) {
-      navigate("/EditPage");
-    } else {
-      navigate("/");
-    }
-  };
-
   //취소
-
   //특정 result 데이터 선택-> result내 participant에서 유저값이 있으면 그것만 빼기
   //데이터 저장시
   const remove = (data) => {
     const board = JSON.parse(sessionStorage.getItem("board"));
-    console.log(board[data.no]);
+
     const newdata = board.filter((board) => board.no != data.no);
-    console.log(newdata);
+
     //data.no보다 작은 부분은 냅두고 나머지만 다시 concat이용
     for (var i = data.no; i < board.length - 1; i++) {
       newdata[i] = { ...newdata[i], no: i - 1 };
-      console.log(newdata);
+
       alert("삭제 완료");
     }
     set(ref(getDatabase(), `board`), {
@@ -139,9 +127,6 @@ function MyGroup() {
   //mypage이동
   const mypage = () => {
     navigate("/MyPage");
-  };
-  const editpage = (data) => {
-    <Link to={`/EditPage/${data}`}></Link>;
   };
   return (
     <div>
@@ -180,7 +165,11 @@ function MyGroup() {
                       <p>{rowData.id}</p>
                       <div className="listParticipant">
                         {rowData.participant ? (
-                          <span>{rowData.participant}</span>
+                          rowData.participant.map((data) => (
+                            <div key={data}>
+                              <span>[{data}]</span>
+                            </div>
+                          ))
                         ) : (
                           <p></p>
                         )}

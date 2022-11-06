@@ -47,7 +47,7 @@ function JoinGroup() {
       iscurrent: iscurrent,
     });
   }
-  //console.log(matchDays);
+
   if (boards.length > 1 && boards[0].no == 0) {
     boards.shift();
   }
@@ -67,13 +67,10 @@ function JoinGroup() {
     const AddBoardListeners = () => {
       onChildAdded(boardRef, (DataSnapshot) => {
         boardArray.push(DataSnapshot.val());
-        //console.log(boardArray);
-        //console.log(board);
         boardArray.sort((a, b) => new Date(a.time) - new Date(b.time));
         setboard(boardArray);
         sessionStorage.setItem("board", JSON.stringify(boardArray));
         setboard(JSON.parse(sessionStorage.getItem("board")));
-        //console.log(boardArray);
         filterfirstdate(boardArray);
       });
     };
@@ -103,18 +100,7 @@ function JoinGroup() {
         } else {
         }
       }
-
-      {
-        /*
-       
-      const result = boardArray.filter((board) => board.id == id.email);
-      sessionStorage.setItem("runlist", JSON.stringify(res));
-      setrunlist(JSON.parse(sessionStorage.getItem("runlist")));
-    */
-      }
     }
-    console.log(boardArray);
-    console.log(result);
     sessionStorage.setItem("runlist", JSON.stringify(result));
     setrunlist(JSON.parse(sessionStorage.getItem("runlist")));
   };
@@ -179,9 +165,7 @@ function JoinGroup() {
                       <p>{rowData.id}</p>
                     </div>
                     <div className="listPlace">
-                      <div className="matchTitle">
-                        <h3>{rowData.place}</h3>
-                      </div>
+                      <p>{rowData.place}</p>
                     </div>
                     <div className="listDistance">
                       <p>{rowData.distance + "km"}</p>

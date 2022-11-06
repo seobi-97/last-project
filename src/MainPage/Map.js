@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 const { kakao } = window;
 
-const MapContainer = ({ searchPlace, placedata, getData }) => {
+const Map = ({ searchPlace }) => {
   useEffect(() => {
     let container = document.getElementById("map");
     let options = {
-      center: new kakao.maps.LatLng(33.450701, 126.570667),
-      level: 3,
+      center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표
+      level: 3, //지도의 확대 레벨
     };
     let infowindow = new kakao.maps.InfoWindow({
       zIndex: 1,
     });
     let map = new kakao.maps.Map(container, options);
-
+    console.log(searchPlace);
     const ps = new kakao.maps.services.Places();
     ps.keywordSearch(searchPlace, placeSearchCB);
 
@@ -41,7 +41,6 @@ const MapContainer = ({ searchPlace, placedata, getData }) => {
             "</div>"
         );
         infowindow.open(map, marker);
-        getData(place.place_name);
       });
     }
 
@@ -54,4 +53,4 @@ const MapContainer = ({ searchPlace, placedata, getData }) => {
     ></div>
   );
 };
-export default MapContainer;
+export default Map;

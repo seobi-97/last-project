@@ -5,8 +5,8 @@ const MapContainer = ({ searchPlace, placedata, getData }) => {
   useEffect(() => {
     let container = document.getElementById("map");
     let options = {
-      center: new kakao.maps.LatLng(33.450701, 126.570667),
-      level: 3,
+      center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표
+      level: 3, //지도의 확대 레벨
     };
     let infowindow = new kakao.maps.InfoWindow({
       zIndex: 1,
@@ -43,17 +43,6 @@ const MapContainer = ({ searchPlace, placedata, getData }) => {
         infowindow.open(map, marker);
         getData(place.place_name);
       });
-      //지도에 클릭이벤트 등록
-      {
-        /* kakao.maps.event.addListener(map, "click", function (mouseEvent) {
-        var latlng = mouseEvent.latLng;
-        var one = latlng.getLat();
-        var two = latlng.getLng();
-        marker.setPosition(latlng);
-        console.log(one, two);
-      });
-        */
-      }
     }
 
     console.log("loading kakaomap");

@@ -60,23 +60,8 @@ function AddForm({ result }) {
   //로그인할때 넘어왔던 값을 이용하기 위해 가져왔다.
   const id = useSelector((state) => state.user.currentUser.email);
   const onSave = (e) => {
-    const inputdata = {
-      id: id,
-      no: count,
-      date: date,
-      time: time,
-      place: place,
-      distance: distance,
-      people: people,
-      participant: [],
-    };
     try {
       setLoading(true);
-      //고유값을 줘서 데이터베이스에 저장시켜야함, 또한 데이터베이스 어느부분에 저장할 건지
-      //따로 값을 설정해서 모임을 생성한 사람만이 모임 삭제를 할 수 있어야하며,
-      //삭제시 다른 이용자들에게 안내 메세지를 주어야한다.
-      //
-      console.log(time);
       set(ref(getDatabase(), `board/${result.no}`), {
         id: id,
         no: result.no,

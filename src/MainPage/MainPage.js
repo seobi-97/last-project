@@ -48,7 +48,6 @@ function MainPage() {
       iscurrent: iscurrent,
     });
   }
-  //console.log(matchDays);
   if (boards.length > 1 && boards[0].no == 0) {
     boards.shift();
   }
@@ -68,13 +67,10 @@ function MainPage() {
     const AddBoardListeners = () => {
       onChildAdded(boardRef, (DataSnapshot) => {
         boardArray.push(DataSnapshot.val());
-        //console.log(boardArray);
-        //console.log(board);
-        //boardArray.sort((a, b) => new Date(a.date) - new Date(b.date));
         setboard(boardArray);
         sessionStorage.setItem("board", JSON.stringify(boardArray));
         setboard(JSON.parse(sessionStorage.getItem("board")));
-        //console.log(boardArray);
+
         filterfirstdate(boardArray);
       });
     };
@@ -104,7 +100,6 @@ function MainPage() {
     //참가자 수
     if (data.participant) {
       num = data.participant.length;
-      console.log(num);
     }
 
     //참가자와 생성자가 다를 경우
@@ -127,7 +122,6 @@ function MainPage() {
           if (parseInt(data.people) > num) {
             //기존 참가자와 신규 참가자를 같이 저장
             const newparticipant = data.participant.concat(id.email);
-            console.log(newparticipant);
             set(ref(getDatabase(), `board/${data.no}`), {
               ...data,
               participant: newparticipant,
@@ -146,29 +140,14 @@ function MainPage() {
     window.location.href = "/";
   };
 
-  //수정
-  //데이터를 가져온 페이지에서 수정
-  const onClick1 = (data) => {
-    if (id == data.id) {
-      navigate("/EditPage");
-    } else {
-      navigate("/");
-    }
-  };
-
   //취소
-
   //특정 result 데이터 선택-> result내 participant에서 유저값이 있으면 그것만 빼기
   const remove = (data) => {
     const board = JSON.parse(sessionStorage.getItem("board"));
-    console.log(board);
-    console.log(data);
-    console.log(board[data.no].participant);
     if (board[data.no].participant !== undefined) {
       const isMatch = board[data.no].participant.filter(
         (board) => board == id.email
       );
-      console.log(isMatch);
       if (isMatch) {
         //특정값 제거
         const participant = data.participant.filter(
@@ -230,7 +209,6 @@ function MainPage() {
           </ul>
         </nav>
       </div>
-
       <div id="dateNav" className="sub-header">
         <div className="tabWrap">
           <div className="swipe-tabs">
@@ -263,7 +241,6 @@ function MainPage() {
           </div>
         </div>
       </div>
-
       <div id="list" className="listContainer">
         <div className="addproject">
           <Link className="link" to="/AddPage">
@@ -294,7 +271,6 @@ function MainPage() {
           </div>
         </ul>
         <ul>
-          {/*틀 만들기/생성부분 입력부분에 맞는 라이브러리 추가하기 */}
           {runlist && runlist.length != 0 ? (
             runlist.map((rowData) => (
               <div key={rowData.no}>
@@ -307,7 +283,9 @@ function MainPage() {
                       <p>{rowData.id}</p>
                     </div>
                     <div className="listPlace">
-                      <p>{rowData.place}</p>
+                      <Link to={`/Map/${rowData.place}`}>
+                        <p>{rowData.place}</p>
+                      </Link>
                     </div>
                     <div className="listDistance">
                       <p>{rowData.distance + "km"}</p>
@@ -325,7 +303,6 @@ function MainPage() {
                       >
                         취소
                       </button>
-                      {/*<button onClick={() => onClick1(rowData)}>수정</button>*/}
                     </div>
                   </div>
                 </li>

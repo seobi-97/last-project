@@ -13,9 +13,6 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Unstable_Grid2";
-import Container from "@mui/material/Container";
 function MyPage() {
   const [change, setchange] = useState(null);
   const [Text, setText] = useState(null);
@@ -44,7 +41,6 @@ function MyPage() {
   };
   const id = useSelector((state) => state.user.currentUser.uid);
   const handleUploadImage = async (event) => {
-    console.log(event.target);
     const file = event.target.files[0];
     const auth = getAuth();
     const user = auth.currentUser;
@@ -113,7 +109,6 @@ function MyPage() {
           });
         }
       );
-      // console.log('uploadTaskSnapshot', uploadTaskSnapshot)
     } catch (error) {
       console.log(error);
     }
