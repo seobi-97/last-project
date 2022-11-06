@@ -22,7 +22,6 @@ function MyPage() {
   const fileInput = useRef();
   const inputOpenImageRef = useRef();
   const user = useSelector((state) => state.user.currentUser);
-  console.log(user.photoURL);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const onChange = async (e) => {

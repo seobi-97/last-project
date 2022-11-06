@@ -70,7 +70,7 @@ function MainPage() {
         boardArray.push(DataSnapshot.val());
         //console.log(boardArray);
         //console.log(board);
-        boardArray.sort((a, b) => new Date(a.date) - new Date(b.date));
+        //boardArray.sort((a, b) => new Date(a.date) - new Date(b.date));
         setboard(boardArray);
         sessionStorage.setItem("board", JSON.stringify(boardArray));
         setboard(JSON.parse(sessionStorage.getItem("board")));
@@ -141,6 +141,8 @@ function MainPage() {
     } else {
       alert("참가 인원 초과");
     }
+    //페이지를 새로고침해서 업데이트를 해준다.
+    window.location.href = "/";
   };
 
   //수정
@@ -158,24 +160,31 @@ function MainPage() {
   //특정 result 데이터 선택-> result내 participant에서 유저값이 있으면 그것만 빼기
   const remove = (data) => {
     const board = JSON.parse(sessionStorage.getItem("board"));
+    console.log(board);
+    console.log(data);
     console.log(board[data.no].participant);
-    const isMatch = board[data.no].participant.filter(
-      (board) => board == id.email
-    );
-    console.log(isMatch);
-    if (isMatch) {
-      //특정값 제거
-      const participant = data.participant.filter(
-        (element) => element != id.email
+    if (board[data.no].participant !== undefined) {
+      const isMatch = board[data.no].participant.filter(
+        (board) => board == id.email
       );
-      set(ref(getDatabase(), `board/${data.no}`), {
-        ...data,
-        participant: participant,
-      });
-      alert("취소 완료");
+      console.log(isMatch);
+      if (isMatch) {
+        //특정값 제거
+        const participant = data.participant.filter(
+          (element) => element != id.email
+        );
+        set(ref(getDatabase(), `board/${data.no}`), {
+          ...data,
+          participant: participant,
+        });
+        alert("취소 완료");
+      } else {
+        alert("취소 실패");
+      }
     } else {
-      alert("취소 실패");
+      alert("취소 대상자가 아닙니다.");
     }
+    window.location.href = "/";
   };
 
   let [btnActive, setBtnActive] = useState("");

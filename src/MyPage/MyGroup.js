@@ -73,9 +73,6 @@ function MyGroup() {
     const AddBoardListeners = () => {
       onChildAdded(boardRef, (DataSnapshot) => {
         boardArray.push(DataSnapshot.val());
-        //console.log(boardArray);
-        //console.log(board);
-        boardArray.sort((a, b) => new Date(a.time) - new Date(b.time));
         setboard(boardArray);
         sessionStorage.setItem("board", JSON.stringify(boardArray));
         setboard(JSON.parse(sessionStorage.getItem("board")));
@@ -94,6 +91,9 @@ function MyGroup() {
   const filterfirstdate = (boardArray) => {
     if (boardArray) {
       const result = boardArray.filter((board) => board.id == id.email);
+      result.sort((a, b) => a.time.substr(3, 2) - b.time.substr(3, 2));
+      result.sort((a, b) => a.time.substr(0, 2) - b.time.substr(0, 2));
+      result.sort((a, b) => new Date(a.date) - new Date(b.date));
       sessionStorage.setItem("runlist", JSON.stringify(result));
       setrunlist(JSON.parse(sessionStorage.getItem("runlist")));
     }
@@ -112,12 +112,22 @@ function MyGroup() {
   //취소
 
   //특정 result 데이터 선택-> result내 participant에서 유저값이 있으면 그것만 빼기
-
+  //데이터 저장시
   const remove = (data) => {
     const board = JSON.parse(sessionStorage.getItem("board"));
     console.log(board[data.no]);
     const newdata = board.filter((board) => board.no != data.no);
     console.log(newdata);
+    //data.no보다 작은 부분은 냅두고 나머지만 다시 concat이용
+    for (var i = data.no; i < board.length - 1; i++) {
+      newdata[i] = { ...newdata[i], no: i - 1 };
+      console.log(newdata);
+      alert("삭제 완료");
+    }
+    set(ref(getDatabase(), `board`), {
+      ...newdata,
+    });
+    window.location.href = "/MyGroup";
     //remove(ref(getDatabase(), `board/${data.no}`));
     //set(ref(getDatabase(), `board/${data.no}`), {});
   };
@@ -161,10 +171,17 @@ function MyGroup() {
                       <p>{rowData.date}</p>
                     </div>
                     <div className="listTime">
-                      <p>{rowData.time}</p>
+                      <p>{rowData.time.substr(0, 8)}</p>
                     </div>
                     <div className="listId">
                       <p>{rowData.id}</p>
+                      <div className="listParticipant">
+                        {rowData.participant ? (
+                          <p>{rowData.participant}</p>
+                        ) : (
+                          <p></p>
+                        )}
+                      </div>
                     </div>
                     <div className="listPlace">
                       <div className="matchTitle">
