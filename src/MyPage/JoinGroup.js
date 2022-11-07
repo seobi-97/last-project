@@ -21,32 +21,7 @@ function JoinGroup() {
   const id = useSelector((state) => state.user.currentUser);
   const norun = "모임이 없습니다.";
   let boardArray = [];
-  //현재 days
-  const currentDate = moment().format("YYYY-MM-D");
   const navigate = useNavigate();
-
-  const matchDays = [];
-  let iscurrent = false;
-  for (var i = 0; i < 14; i++) {
-    const addDate = moment().add(i, "days");
-    const year = addDate.format("YYYY");
-    const month = addDate.format("MM");
-    const day = addDate.format("D");
-    const weeks = ["일", "월", "화", "수", "목", "금", "토"];
-    const yoil = weeks[addDate.weekday()];
-    iscurrent = false;
-    if (currentDate == addDate.format("YYYY-MM-D")) {
-      iscurrent = true;
-    }
-    matchDays.push({
-      id: i,
-      year: year,
-      month: month,
-      day: day,
-      yoil: yoil,
-      iscurrent: iscurrent,
-    });
-  }
 
   if (boards.length > 1 && boards[0].no == 0) {
     boards.shift();
@@ -84,7 +59,6 @@ function JoinGroup() {
   //filter를 통한 내 참가 내역 가져오기
   const filterfirstdate = (boardArray) => {
     let result = [];
-    let result2 = [];
     if (boardArray) {
       //모든 모임들을 검사한다.
       for (var i = 0; i < boardArray.length; i++) {
@@ -104,22 +78,6 @@ function JoinGroup() {
     sessionStorage.setItem("runlist", JSON.stringify(result));
     setrunlist(JSON.parse(sessionStorage.getItem("runlist")));
   };
-
-  //수정
-  //데이터를 가져온 페이지에서 수정
-  const onClick1 = (data) => {
-    if (id == data.id) {
-      navigate("/EditPage");
-    } else {
-      navigate("/");
-    }
-  };
-
-  //취소
-
-  //특정 result 데이터 선택-> result내 participant에서 유저값이 있으면 그것만 빼기
-  const remove = (data) => {};
-
   //mainpage이동
   const mainpage = () => {
     navigate("/");
@@ -128,6 +86,7 @@ function JoinGroup() {
   const mypage = () => {
     navigate("/MyPage");
   };
+
   return (
     <div>
       <div className="header">
@@ -149,7 +108,32 @@ function JoinGroup() {
 
       <div id="list" className="listContainer">
         <ul>
-          {/*틀 만들기/생성부분 입력부분에 맞는 라이브러리 추가하기 */}
+          <div>
+            <li className="textRun">
+              <a>
+                <div className="textTime">
+                  <p>날짜</p>
+                </div>
+                <div className="textTime">
+                  <p>시간</p>
+                </div>
+                <div className="textId">
+                  <p>리더</p>
+                </div>
+                <div className="textPlace">
+                  <p>장소</p>
+                </div>
+                <div className="textDistance">
+                  <p>거리</p>
+                </div>
+                <div className="textDistance">
+                  <p>인원</p>
+                </div>
+              </a>
+            </li>
+          </div>
+        </ul>
+        <ul>
           {runlist && runlist.length != 0 ? (
             runlist.map((rowData) => (
               <div key={rowData.no}>
@@ -170,18 +154,34 @@ function JoinGroup() {
                     <div className="listDistance">
                       <p>{rowData.distance + "km"}</p>
                     </div>
+                    <div className="listDistance">
+                      {rowData.participant === undefined ? (
+                        <p>
+                          {0}/{rowData.people}
+                        </p>
+                      ) : (
+                        <p>
+                          {rowData.participant.length}/{rowData.people}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </li>
               </div>
             ))
           ) : (
-            <div>
+            <div style={{ marginTop: "50px", textAlign: "center" }}>
               <li className="listRun">
                 <p>참가한 모임이 없습니다</p>
               </li>
             </div>
           )}
         </ul>
+        <div className="goback">
+          <button className="w-btn w-btn-blue" onClick={() => mypage()}>
+            뒤로 돌아가기
+          </button>
+        </div>
       </div>
     </div>
   );

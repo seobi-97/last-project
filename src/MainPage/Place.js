@@ -6,7 +6,14 @@ const Place = () => {
   const { place } = useParams();
   return (
     <>
-      <Map searchPlace={place} />
+      <div>
+        <div className="checkmap">
+          <h3>위치 확인</h3>
+        </div>
+        <div className="checkmap">
+          <Map searchPlace={place} />
+        </div>
+      </div>
     </>
   );
 };

@@ -13,7 +13,7 @@ import logoimage from "../images/로고2.png";
 import moment from "moment";
 import "moment/locale/ko";
 import classnames from "classnames";
-
+import Swal from "sweetalert2";
 function MainPage() {
   let boards = useSelector((state) => state.user.boards);
   const [boardRef, setboardRef] = useState(ref(getDatabase(), "board"));
@@ -110,7 +110,9 @@ function MainPage() {
           ...data,
           participant: [id.email],
         });
-        alert("참가 신청");
+        alert("참가 신청 완료");
+        //페이지를 새로고침해서 업데이트를 해준다.
+        window.location.href = "/";
       } else {
         let res = data.participant.find((element) => {
           return element == id.email;
@@ -126,18 +128,17 @@ function MainPage() {
               ...data,
               participant: newparticipant,
             });
-            alert("참가 신청");
+            alert("참가 신청 완료");
+            //페이지를 새로고침해서 업데이트를 해준다.
+            window.location.href = "/";
           } else {
             alert("참가 인원 초과");
           }
         }
       }
     } else {
-      alert("모임 생성자입니다.");
+      alert("현재 리더입니다.");
     }
-
-    //페이지를 새로고침해서 업데이트를 해준다.
-    window.location.href = "/";
   };
 
   //취소
@@ -157,14 +158,14 @@ function MainPage() {
           ...data,
           participant: participant,
         });
-        alert("취소 완료");
+        alert("참가 취소 완료");
+        window.location.href = "/";
       } else {
-        alert("취소 실패");
+        alert("참가 취소 실패");
       }
     } else {
       alert("취소 대상자가 아닙니다.");
     }
-    window.location.href = "/";
   };
 
   let [btnActive, setBtnActive] = useState("");
@@ -263,8 +264,11 @@ function MainPage() {
                 <div className="textDistance">
                   <p>거리</p>
                 </div>
+                <div className="textDistance">
+                  <p>인원</p>
+                </div>
                 <div className="textButton">
-                  <p>신청유무</p>
+                  <p>신청/취소</p>
                 </div>
               </a>
             </li>
@@ -289,6 +293,17 @@ function MainPage() {
                     </div>
                     <div className="listDistance">
                       <p>{rowData.distance + "km"}</p>
+                    </div>
+                    <div className="listDistance">
+                      {rowData.participant === undefined ? (
+                        <p>
+                          {0}/{rowData.people}
+                        </p>
+                      ) : (
+                        <p>
+                          {rowData.participant.length}/{rowData.people}
+                        </p>
+                      )}
                     </div>
                     <div className="listButton">
                       <button

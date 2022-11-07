@@ -49,7 +49,7 @@ const Map = ({ searchPlace }) => {
   return (
     <div
       id="map"
-      style={{ marginTop: "20px", width: "400px", height: "400px" }}
+      style={{ marginTop: "20px", width: "600px", height: "600px" }}
     ></div>
   );
 };

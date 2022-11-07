@@ -25,34 +25,11 @@ function MyGroup() {
   const [runlist, setrunlist] = useState(null);
   const id = useSelector((state) => state.user.currentUser);
   const norun = "모임이 없습니다.";
-  const usersRef = ref(getDatabase(), "board");
+
   let boardArray = [];
-  //현재 days
-  const currentDate = moment().format("YYYY-MM-D");
+
   const navigate = useNavigate();
 
-  const matchDays = [];
-  let iscurrent = false;
-  for (var i = 0; i < 14; i++) {
-    const addDate = moment().add(i, "days");
-    const year = addDate.format("YYYY");
-    const month = addDate.format("MM");
-    const day = addDate.format("D");
-    const weeks = ["일", "월", "화", "수", "목", "금", "토"];
-    const yoil = weeks[addDate.weekday()];
-    iscurrent = false;
-    if (currentDate == addDate.format("YYYY-MM-D")) {
-      iscurrent = true;
-    }
-    matchDays.push({
-      id: i,
-      year: year,
-      month: month,
-      day: day,
-      yoil: yoil,
-      iscurrent: iscurrent,
-    });
-  }
   if (boards.length > 1 && boards[0].no == 0) {
     boards.shift();
   }
@@ -75,7 +52,6 @@ function MyGroup() {
         setboard(boardArray);
         sessionStorage.setItem("board", JSON.stringify(boardArray));
         setboard(JSON.parse(sessionStorage.getItem("board")));
-        //console.log(boardArray);
         filterfirstdate(boardArray);
       });
     };
@@ -98,26 +74,20 @@ function MyGroup() {
     }
   };
 
-  //취소
-  //특정 result 데이터 선택-> result내 participant에서 유저값이 있으면 그것만 빼기
-  //데이터 저장시
+  //삭제
   const remove = (data) => {
     const board = JSON.parse(sessionStorage.getItem("board"));
-
+    //전체 데이터 중 no값이 다른 것들 filter
     const newdata = board.filter((board) => board.no != data.no);
-
     //data.no보다 작은 부분은 냅두고 나머지만 다시 concat이용
     for (var i = data.no; i < board.length - 1; i++) {
-      newdata[i] = { ...newdata[i], no: i - 1 };
-
-      alert("삭제 완료");
+      newdata[i] = { ...newdata[i], no: i };
     }
+    alert("삭제 완료");
     set(ref(getDatabase(), `board`), {
       ...newdata,
     });
     window.location.href = "/MyGroup";
-    //remove(ref(getDatabase(), `board/${data.no}`));
-    //set(ref(getDatabase(), `board/${data.no}`), {});
   };
 
   //mainpage이동
@@ -149,7 +119,6 @@ function MyGroup() {
 
       <div id="list" className="listContainer">
         <ul>
-          {/*틀 만들기/생성부분 입력부분에 맞는 라이브러리 추가하기 */}
           {runlist && runlist.length != 0 ? (
             runlist.map((rowData) => (
               <div key={rowData.no}>
@@ -197,13 +166,18 @@ function MyGroup() {
               </div>
             ))
           ) : (
-            <div>
+            <div style={{ marginTop: "50px", textAlign: "center" }}>
               <li className="listRun">
                 <p>생성한 모임이 없습니다</p>
               </li>
             </div>
           )}
         </ul>
+        <div className="goback">
+          <button className="w-btn w-btn-blue" onClick={() => mypage()}>
+            뒤로 돌아가기
+          </button>
+        </div>
       </div>
     </div>
   );
