@@ -199,7 +199,7 @@ span {
   object-fit: cover;
 }
 .profileupload {
-  width: 100px;
+  width: 170px;
   height: 100px;
   align-items: center;
   margin: 0 auto;
@@ -546,11 +546,11 @@ a:hover {
 }
 .w-btn-blue {
   background-color: #6aafe6;
-  color: #d4dfe6;
+  color: white;
 }
 .w-btn-pink {
   background-color: #f199bc;
-  color: #d4dfe6;
+  color: white;
 }
 
 .textRun a {
@@ -763,4 +763,24 @@ a:hover {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.sendbutton {
+  background: #7a84eb;
+  color: white;
+  text-transform: uppercase;
+  border: none;
+  margin-top: 40px;
+  font-size: 16px;
+  font-weight: 100;
+  letter-spacing: 10px;
+}
+.sendbutton:hover {
+  background: #636ee6;
+  color: white;
+  text-transform: uppercase;
+  border: none;
+  margin-top: 40px;
+  font-size: 16px;
+  font-weight: 100;
+  letter-spacing: 10px;
 }

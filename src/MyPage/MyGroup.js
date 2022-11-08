@@ -17,7 +17,7 @@ import firebase from "../firebase";
 import logoimage from "../images/로고2.png";
 import moment from "moment";
 import "moment/locale/ko";
-
+import ChatIcon from "@mui/icons-material/Chat";
 function MyGroup() {
   let boards = useSelector((state) => state.user.boards);
   const [boardRef, setboardRef] = useState(ref(getDatabase(), "board"));
@@ -124,6 +124,11 @@ function MyGroup() {
               <div key={rowData.no}>
                 <li className="listRun">
                   <div className="a">
+                    <div>
+                      <Link to={`/ChatPage/${rowData.no}`}>
+                        <ChatIcon style={{ cursor: "pointer" }} />
+                      </Link>
+                    </div>
                     <div className="listTime">
                       <p>{rowData.date}</p>
                     </div>

@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { getAuth, signOut, updateProfile } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   DataSnapshot,
   getDatabase,
   onChildAdded,
   ref,
   set,
+  remove,
+  push,
+  child,
 } from "firebase/database";
 import logoimage from "../images/로고2.png";
 import moment from "moment";
 import "moment/locale/ko";
 import classnames from "classnames";
-import Swal from "sweetalert2";
 function MainPage() {
   let boards = useSelector((state) => state.user.boards);
   const [boardRef, setboardRef] = useState(ref(getDatabase(), "board"));
@@ -25,6 +27,7 @@ function MainPage() {
   //현재 days
   const currentDate = moment().format("YYYY-MM-D");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const matchDays = [];
   let iscurrent = false;
@@ -70,7 +73,6 @@ function MainPage() {
         setboard(boardArray);
         sessionStorage.setItem("board", JSON.stringify(boardArray));
         setboard(JSON.parse(sessionStorage.getItem("board")));
-
         filterfirstdate(boardArray);
       });
     };

@@ -1,8 +1,17 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setPhotoURL } from "../redux/actions/user_action";
-import { DataSnapshot, getDatabase, ref, update, set } from "firebase/database";
+import {
+  DataSnapshot,
+  onChildAdded,
+  getDatabase,
+  ref,
+  update,
+  set,
+} from "firebase/database";
+
+import { setChat } from "../redux/actions/user_action";
 import { getAuth, signOut, updateProfile } from "firebase/auth";
 import logoimage from "../images/로고2.png";
 import { TbClick } from "react-icons/tb";
@@ -13,6 +22,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 
+import { setBoard } from "../redux/actions/user_action";
 function MyPage() {
   const [change, setchange] = useState(null);
   const [Text, setText] = useState(null);
@@ -21,6 +31,10 @@ function MyPage() {
   const user = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [messageRef, setmessageRef] = useState(ref(getDatabase(), "message"));
+
+  const [message, setmessage] = useState([]);
+  let boardArray = [];
   const onChange = async (e) => {
     e.preventDefault();
     const reader = new FileReader();
@@ -32,7 +46,18 @@ function MyPage() {
       setchange(reader.result);
     };
   };
-
+  useEffect(() => {
+    dispatch(setBoard(JSON.parse(sessionStorage.getItem("board"))));
+    const AddBoardListeners = () => {
+      onChildAdded(messageRef, (DataSnapshot) => {
+        boardArray.push(DataSnapshot.val());
+        setmessage(boardArray);
+        sessionStorage.setItem("chat", JSON.stringify(boardArray));
+      });
+      dispatch(setChat(boardArray));
+    };
+    AddBoardListeners();
+  }, []);
   const handleOpenImageRef = () => {
     inputOpenImageRef.current.click();
   };

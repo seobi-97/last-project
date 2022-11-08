@@ -1,4 +1,10 @@
-import { SET_USER, CLEAR_USER, SET_PHOTO_URL } from "./types";
+import {
+  SET_USER,
+  CLEAR_USER,
+  SET_PHOTO_URL,
+  SET_BOARD,
+  SET_CHAT,
+} from "./types";
 
 export function setUser(user) {
   return {
@@ -17,5 +23,17 @@ export function setPhotoURL(photoURL) {
   return {
     type: SET_PHOTO_URL,
     payload: photoURL,
+  };
+}
+export function setBoard(boards) {
+  return {
+    type: SET_BOARD,
+    payload: boards,
+  };
+}
+export function setChat(message) {
+  return {
+    type: SET_CHAT,
+    payload: message,
   };
 }
