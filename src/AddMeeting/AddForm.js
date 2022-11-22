@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { boardSave } from "../redux/actions/user_action";
 import { ko } from "date-fns/esm/locale";
 import { useNavigate } from "react-router-dom";
 import { map } from "@firebase/util";

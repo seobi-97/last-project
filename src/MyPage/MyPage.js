@@ -48,15 +48,6 @@ function MyPage() {
   };
   useEffect(() => {
     dispatch(setBoard(JSON.parse(sessionStorage.getItem("board"))));
-    const AddBoardListeners = () => {
-      onChildAdded(messageRef, (DataSnapshot) => {
-        boardArray.push(DataSnapshot.val());
-        setmessage(boardArray);
-        sessionStorage.setItem("chat", JSON.stringify(boardArray));
-      });
-      dispatch(setChat(boardArray));
-    };
-    AddBoardListeners();
   }, []);
   const handleOpenImageRef = () => {
     inputOpenImageRef.current.click();
@@ -159,6 +150,9 @@ function MyPage() {
   const joingroup = () => {
     navigate("/JoinGroup");
   };
+  const result = () => {
+    navigate("/ResultPage");
+  };
 
   return (
     <div>
@@ -211,6 +205,10 @@ function MyPage() {
             </div>
             <div className="HalfLine">
               <p onClick={() => joingroup()}>참가 모임 내역 </p>
+              <TbClick />
+            </div>
+            <div className="HalfLine">
+              <p onClick={() => result()}>운동 결과</p>
               <TbClick />
             </div>
           </div>

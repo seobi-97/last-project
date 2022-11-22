@@ -3,7 +3,6 @@ import moment from "moment";
 
 function Message({ message, user }) {
   const timeFromNow = (timestamp) => moment(timestamp).fromNow();
-  console.log(message);
   const isImage = (message) => {
     return (
       message.hasOwnProperty("image") && !message.hasOwnProperty("content")

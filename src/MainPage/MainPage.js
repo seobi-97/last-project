@@ -28,7 +28,8 @@ function MainPage() {
   const currentDate = moment().format("YYYY-MM-D");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [join, setjoin] = useState(false);
+  const [cancel, setcancel] = useState(false);
   const matchDays = [];
   let iscurrent = false;
   for (var i = 0; i < 14; i++) {
@@ -42,6 +43,7 @@ function MainPage() {
     if (currentDate == addDate.format("YYYY-MM-D")) {
       iscurrent = true;
     }
+
     matchDays.push({
       id: i,
       year: year,
@@ -113,6 +115,7 @@ function MainPage() {
           participant: [id.email],
         });
         alert("참가 신청 완료");
+        setjoin(true);
         //페이지를 새로고침해서 업데이트를 해준다.
         window.location.href = "/";
       } else {
@@ -131,6 +134,7 @@ function MainPage() {
               participant: newparticipant,
             });
             alert("참가 신청 완료");
+            setjoin(true);
             //페이지를 새로고침해서 업데이트를 해준다.
             window.location.href = "/";
           } else {

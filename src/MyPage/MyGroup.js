@@ -129,6 +129,7 @@ function MyGroup() {
                         <ChatIcon style={{ cursor: "pointer" }} />
                       </Link>
                     </div>
+
                     <div className="listTime">
                       <p>{rowData.date}</p>
                     </div>

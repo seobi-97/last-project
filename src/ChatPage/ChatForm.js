@@ -28,7 +28,6 @@ function ChatForm() {
   const user = useSelector((state) => state.user.currentUser);
   const board = useSelector((state) => state.user.boards);
   const chat = useSelector((state) => state.user.message);
-  console.log(board);
   const [boardRef, setboardRef] = useState(ref(getDatabase(), `board/${no}`));
   const [messageRef, setmessageRef] = useState(ref(getDatabase(), "message"));
   const dispatch = useDispatch();
@@ -61,6 +60,7 @@ function ChatForm() {
     };
     const newdata = chat.concat(message);
     console.log(newdata);
+    dispatch(setChat(newdata));
     return message;
   };
   const handleChange = (event) => {

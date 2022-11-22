@@ -20,6 +20,7 @@ import JoinGroup from "./MyPage/JoinGroup";
 import EditPage from "./EditPage/AddPage";
 import Map from "./MainPage/Place";
 import ChatPage from "./ChatPage/ChatPage";
+import ResultPage from "./ResultPage/ResultPage";
 
 function App(props) {
   const navigate = useNavigate();
@@ -54,6 +55,7 @@ function App(props) {
         <Route path="/MyPage" element={<MyPage />} />
         <Route path="/MyGroup" element={<MyGroup />} />
         <Route path="/JoinGroup" element={<JoinGroup />} />
+        <Route path="/ResultPage" element={<ResultPage />} />
         <Route path="/EditPage/:no" element={<EditPage />} />
         <Route path="/Map/:place" element={<Map />} />
         <Route path="/ChatPage/:no" element={<ChatPage />} />

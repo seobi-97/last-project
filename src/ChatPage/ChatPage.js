@@ -17,13 +17,9 @@ import ChatForm from "./ChatForm";
 import ChatList from "./ChatList";
 function ChatPage() {
   const { no } = useParams();
-  const [content, setContent] = useState("");
-  const [errors, setErrors] = useState([]);
-  const [loading, setLoading] = useState(false);
   const user = useSelector((state) => state.user.currentUser);
   const board = useSelector((state) => state.user.boards);
   let boardArray = [];
-  const [data, setdata] = useState([]);
   const [message, setmessage] = useState([]);
   const dispatch = useDispatch();
   const [messageRef, setmessageRef] = useState(ref(getDatabase(), "message"));
@@ -36,9 +32,7 @@ function ChatPage() {
         boardArray.push(DataSnapshot.val());
         setmessage(boardArray);
         sessionStorage.setItem("chat", JSON.stringify(boardArray));
-        console.log(boardArray);
       });
-      dispatch(setChat(boardArray));
     };
     AddBoardListeners();
   }, []);
