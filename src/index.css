@@ -760,6 +760,7 @@ a:hover {
   align-items: center;
 }
 .goback {
+  padding-top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -783,4 +784,22 @@ a:hover {
   font-size: 16px;
   font-weight: 100;
   letter-spacing: 10px;
+}
+
+.resultcontainer {
+  border: 1px solid #303f9f;
+  border-radius: 10px;
+  padding: 20px 30px;
+}
+.resultinput {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.resultinput p {
+  padding-top: 12px;
+}
+.resultinput input {
+  margin-right: 5px;
 }
